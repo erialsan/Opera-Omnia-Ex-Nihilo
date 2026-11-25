@@ -1,0 +1,9 @@
+// Apply only for -PooenProbe=materialslib (or both). Never package the test mods.
+def probeDir = file('build/probe-materialslib')
+def jars = ['MaterialsLib-f68a8b09d45d-dev.jar', 'materials-probe-dev.jar'].collect { new File(probeDir, it) }
+if (!jars.every { it.isFile() }) {
+    throw new GradleException('Prepare MaterialsLib first: bash probes/materialslib/prepare.sh')
+}
+dependencies {
+    devOnlyNonPublishable(files(jars))
+}
