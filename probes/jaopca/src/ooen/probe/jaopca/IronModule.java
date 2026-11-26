@@ -1,6 +1,7 @@
 package ooen.probe.jaopca;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +19,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import ooen.materia.IronForm;
 import thelm.jaopca.api.JAOPCAApi;
 import thelm.jaopca.api.forms.IForm;
 import thelm.jaopca.api.forms.IFormRequest;
@@ -132,6 +134,28 @@ public class IronModule implements IModule {
         IronProvider.LOG.info("phase=loadComplete key={} crossPhaseMatchingRecipes={} outputs={}", RETRY,
             Collections.frequency(control, controlId), control);
         IronProvider.LOG.info("RESULT case={} ironFormAndRecipeChecks=PASS", IronProvider.CASE);
+
+        verifyMateriaCandidates(IronForm.INGOT, "minecraft:iron_ingot@0", IronProvider.ID + ":second_ingot@0");
+        verifyMateriaCandidates(IronForm.GRAVEL, IronProvider.gravel == null
+            ? "jaopca:ooen_gravel.iron@0" : IronProvider.ID + ":existing_iron_gravel@0");
+        verifyMateriaCandidates(IronForm.SAND, "jaopca:ooen_sand.iron@0");
+        if (excluded(2)) verifyMateriaCandidates(IronForm.POWDER);
+        else verifyMateriaCandidates(IronForm.POWDER, "jaopca:ooen_powder.iron@0");
+        IronProvider.LOG.info("MATERIA_IRON_CANDIDATES_PASS case={}", IronProvider.CASE);
+    }
+
+    private static void verifyMateriaCandidates(IronForm form, String... expected) {
+        List<ItemStack> candidates = form.candidates();
+        List<String> remaining = new ArrayList<>(Arrays.asList(expected));
+        for (ItemStack candidate : candidates) {
+            require(remaining.remove(id(candidate)), "unexpected Materia candidate for " + form + ": " + id(candidate));
+            require(candidate.stackSize == 1, "Materia candidate count is not one for " + form);
+            candidate.stackSize = 42;
+        }
+        require(remaining.isEmpty(), "missing Materia candidates for " + form + ": " + remaining);
+        for (ItemStack entry : OreDictionary.getOres(form.getOreKey(), false)) {
+            require(entry.stackSize != 42, "Materia candidate exposed a shared stack for " + form);
+        }
     }
 
     // Count actual Forge recipes by running their matcher and taking the result, not counting JAOPCA queue keys.

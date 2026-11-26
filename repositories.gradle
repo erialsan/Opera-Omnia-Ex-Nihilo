@@ -4,12 +4,15 @@ repositories {
     exclusiveContent {
         forRepository {
             maven {
-                name = 'Forgelin releases'
+                name = 'FalsePattern releases'
                 url = uri('https://mvn.falsepattern.com/releases')
             }
         }
         filter {
             includeModule('com.falsepattern', 'forgelin-mc1.7.10')
+            includeModule('com.falsepattern', 'falsepatternlib-mc1.7.10')
+            includeModule('com.falsepattern', 'chunkapi-mc1.7.10')
+            includeModule('com.falsepattern', 'endlessids-mc1.7.10')
         }
     }
 }

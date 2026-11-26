@@ -10,7 +10,7 @@ if (!(scenario in ['generate', 'reuse', 'exclude'])) throw new GradleException('
 def trial = sourceSets.create('jaopcaProbe') {
     java.setSrcDirs(['probes/jaopca/src'])
     resources.setSrcDirs([])
-    compileClasspath += sourceSets.main.compileClasspath + files(dist)
+    compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath + files(dist)
 }
 def fixture = tasks.register('jaopcaProbeJar', Jar) {
     from(trial.output)

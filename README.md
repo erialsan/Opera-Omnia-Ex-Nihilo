@@ -23,19 +23,34 @@ Minecraft **1.7.10**、Forge **10.13.4.1614**、MCP **stable 12** を使う。�
 
 Kotlin 移行後の実測（2026-11-26）：`build` と `runClient25` が成功。Forgelin が Kotlin 2.4.10 をロードし、Materia のロード完了時に `ingotIron entries=1` を確認した。MaterialsLib・JAOPCA は未導入。`runServer25` は初回の EULA 確認で停止したため、専用サーバーは未検証。
 
-## 必須依存：Forgelin
+## 必須依存
 
-Materia には Minecraft 1.7.10 向けの [Forgelin 2.4.3-2.4.10](https://github.com/LegacyModdingMC/Forgelin/releases/tag/2.4.3-2.4.10) が必要。Kotlin コンパイラは Forgelin が提供するランタイムと同じ 2.4.10 を使う。開発時は Gradle が Forgelin の dev JAR を取得する。配布された Materia を使う場合はクライアントとサーバーの両方に Forgelin を入れる。通常版 Forgelin は初回起動時に Kotlin ランタイムを取得するため、ネット接続が必要。
+配布版 Materia を使う場合は、Minecraft 1.7.10 向けの以下の MOD をクライアント・専用サーバーの両方に入れる（記載は最低バージョン）。開発時は Gradle が dev JAR を取得する。
+
+- [Forgelin 2.4.3-2.4.10](https://github.com/LegacyModdingMC/Forgelin/releases/tag/2.4.3-2.4.10)：Kotlin コンパイラは提供されるランタイムと同じ 2.4.10 を使う。通常版は初回起動時に Kotlin ランタイムを取得する。
+- [FalsePatternLib 1.12.2](https://github.com/FalsePattern/FalsePatternLib/releases/tag/1.12.2)
+- [GTNHLib 0.12.10](https://github.com/GTNewHorizons/GTNHLib/releases/tag/0.12.10)：Materia のコードから API を使用できるよう、コンパイル時にも追加する。
 
 ## 開発用の依存関係
 
 `dependencies.gradle` で **BugTorch 1.3.1** と **ArchaicFix 0.8.0** を Modrinth Maven から、**JarJar 0.4.2-beta** を GTNH Maven から取得する。いずれも `runtimeOnlyNonPublishable` で開発環境の実行時に使う。
 
+EndlessIDs 1.7.1 と ChunkAPI 0.8.1 も開発環境の実行時だけに追加する。この組み合わせは [ArchaicFix 0.8.0 のコンパイル時依存](https://github.com/embeddedt/ArchaicFix/blob/0.8.0/dependencies.gradle) に合わせている。ChunkAPI 0.5.1 には ArchaicFix の照明処理が呼び出す `registerDataManager(DataManager, int)` がなく、起動時に `NoSuchMethodError` になる。EndlessIDs 1.5-beta0003 は ChunkAPI 0.6.0 未満を要求するため、ChunkAPI だけは更新できない。配布版 Materia の必須依存ではない。
+
 JarJar の動作確認には、RetroFuturaBootstrap を使う `./gradlew runClient25` または `./gradlew runServer25` を使用する。
+
+## Materia の鉄対応
+
+ロード完了時の `Materia iron form:` に、鉄インゴット・鉱石砂利・鉱石砂・鉱石粉の既存候補（アイテム ID とメタデータ）が出る。鉱石三形態の照合キーは `ooenOreGravelIron`、`ooenOreSandIron`、`ooenOrePowderIron`。候補が複数あっても一つに決め打ちせず、新規アイテムやレシピはまだ登録しない。
 
 ## 最初の依存検証：鉄一種を通す
 
-候補を比較するときだけ、非公開のローカル Gradle 設定 `addon.local.gradle` の `dependencies` に `devOnlyNonPublishable` で検証用 JAR を追加する。難読化された配布 JAR は `rfg.deobf(project.files("…"))` を通す。両方を一度に追加せず、基準 → 各単体 → 併用の順に実行する。
+検証用 MOD は通常のビルドに含めない。基準 → 各単体 → 併用の順に、`-PooenProbe=materialslib|jaopca|both` のいずれかを指定して起動する。
+
+- MaterialsLib: [準備と実行の手順](probes/materialslib/README.md)を参照。
+- JAOPCA: [配布ファイル 8859967](https://www.curseforge.com/minecraft/mc-mods/jaopca/files/8859967)を `build/probe-jaopca/JAOPCA-1.7.10-W.0.8.32.jar` に置き、`./gradlew runClient25 -PooenProbe=jaopca -PjaopcaCase=reuse` を実行する。Gradle が SHA-256 の照合と逆難読化を行う。`generate` と `exclude` も指定できる。`MATERIA_IRON_CANDIDATES_PASS` は実際の登録品からの候補取得を示す。
+
+JAOPCA `reuse` の実測（2026-11-26、開発クライアント・GTNH パックなし）：鉄の鉱石砂利は既存品を再利用し、砂と粉は各 1 種を生成した。三形態とも対応するレシピは 1 件。ただし対照試験では別フェーズから同じキーで再登録したレシピが 2 件になった。また、早期の別名は別素材になり、遅延した別名は OreDictionary に届いたが素材としては認識されなかった。この実測は JAOPCA 側の試験で、追加した Materia の候補取得アサーションを含む再起動は未実施。Materia 本体は画面を起動せず Forge の OreDictionary を使って確認し、未登録キーを作らないこと、後から登録した複数候補を拾うこと、ワイルドカードを除外し元のスタックや NBT を変更しないことを確認した。MaterialsLib は検証用 JAR の生成と SHA-256 の一致まで確認し、起動は未実施。
 
 | 試験 | 実施内容と合格条件 |
 | --- | --- |
