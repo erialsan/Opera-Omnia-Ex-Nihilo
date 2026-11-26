@@ -4,7 +4,7 @@ title: Materia 開発環境と依存検証
 ---
 # Opera Omnia Ex Nihilo: Materia
 
-[開発計画](development-plan.md)の最初の問いは、既存の素材から鉱石砂利・鉱石砂・鉱石粉を重複なく用意できるか、という点。まず `ooen_materia` 一つだけをロードし、外部ライブラリを追加する前の比較値を取る。この段階ではアイテムもレシピも登録しない。
+[開発計画](development-plan.md)の最初の問いは、既存の素材から鉱石砂利・鉱石砂・鉱石粉を重複なく用意できるか、という点。まず `ooen_materia` をロードし、MaterialsLib・JAOPCA を追加する前の比較値を取る。この段階ではアイテムもレシピも登録しない。
 
 ## 基準構成を起動する
 
@@ -21,7 +21,11 @@ Minecraft **1.7.10**、Forge **10.13.4.1614**、MCP **stable 12** を使う。�
 2. Wayland 環境に合わせ、クライアントは **`./gradlew runClient25`** でタイトルまで起動する（クライアントの実行環境は Java 25）。FML ログの `OreDictionary baseline: ingotIron entries=N` を探し、`N` が 1 以上であることを記録して終了する。これはロード完了時の OreDictionary エントリ数であり、素材 ID やユニークな提供元の数ではない。
 3. `./gradlew runServer` で開発用専用サーバーも起動する。初回に EULA で停止した場合は、内容に同意する場合のみ開発サーバー側で設定して再実行する。サーバーでも同じログを確認し、`stop` で終了する。本番ワールドは使わない。
 
-基準構成の実測（2026-11-25）：`build` 成功。`runClient25` で `ooen_materia@0.0.0-dev` がロードされ、`ingotIron entries=1`、シングルプレイのワールド参加まで確認した。MaterialsLib・JAOPCA は未導入。専用サーバーは未検証。
+Kotlin 移行前の実測（2026-11-25）：`build` 成功。`runClient25` で `ooen_materia@0.0.0-dev` がロードされ、`ingotIron entries=1`、シングルプレイのワールド参加まで確認した。MaterialsLib・JAOPCA は未導入。専用サーバーは未検証。
+
+## 必須依存：Forgelin
+
+Materia には Minecraft 1.7.10 向けの [Forgelin 2.4.3-2.4.10](https://github.com/LegacyModdingMC/Forgelin/releases/tag/2.4.3-2.4.10) が必要。Kotlin コンパイラは Forgelin が提供するランタイムと同じ 2.4.10 を使う。開発時は Gradle が Forgelin の dev JAR を取得する。配布された Materia を使う場合はクライアントとサーバーの両方に Forgelin を入れる。通常版 Forgelin は初回起動時に Kotlin ランタイムを取得するため、ネット接続が必要。
 
 ## 開発用の依存関係
 
