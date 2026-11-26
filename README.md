@@ -8,7 +8,7 @@ title: Materia 開発環境と依存検証
 
 ## 基準構成を起動する
 
-Minecraft **1.7.10**、Forge **10.13.4.1614**、MCP **stable 12** を使う。ビルドは **JDK 25** と同梱の **Gradle 9.7.1**、GTNH settings convention **2.0.33**。`gradle.properties` の `enableModernJavaSyntax = jvmDowngrader` で **JvmDowngrader** を使用する。生成する MOD のベースクラスは Java 8 向けのバイトコードに変換する。GTNH のビルドツールを使うことと、ゲーム側に GTNH パックを必須にすることは別である。
+Minecraft **1.7.10**、Forge **10.13.4.1614**、MCP **stable 12** を使う。ビルドは **JDK 25** と同梱の **Gradle 9.7.1**、GTNH settings convention **2.0.34**。`gradle.properties` の `enableModernJavaSyntax = jvmDowngrader` で **JvmDowngrader** を使用する。生成する MOD のベースクラスは Java 8 向けのバイトコードに変換する。GTNH のビルドツールを使うことと、ゲーム側に GTNH パックを必須にすることは別である。
 
 1. JDK 25 で以下を実行する。初回は Gradle、ツールチェーン、Minecraft、Forge 等の取得にネット接続が必要。Git タグのない作業コピーでは開発用の版を指定する。
 
@@ -23,9 +23,11 @@ Minecraft **1.7.10**、Forge **10.13.4.1614**、MCP **stable 12** を使う。�
 
 基準構成の実測（2026-11-25）：`build` 成功。`runClient25` で `ooen_materia@0.0.0-dev` がロードされ、`ingotIron entries=1`、シングルプレイのワールド参加まで確認した。MaterialsLib・JAOPCA は未導入。専用サーバーは未検証。
 
-## 追加予定の依存関係
+## 開発用の依存関係
 
-**BugTorch**、**ArchaicFix**、**JarJar** を依存関係に追加する予定。現時点では、いずれも `dependencies.gradle` に未登録。
+`dependencies.gradle` で **BugTorch 1.3.1** と **ArchaicFix 0.8.0** を Modrinth Maven から、**JarJar 0.4.2-beta** を GTNH Maven から取得する。いずれも `runtimeOnlyNonPublishable` で開発環境の実行時に使う。
+
+JarJar の動作確認には、RetroFuturaBootstrap を使う `./gradlew runClient25` または `./gradlew runServer25` を使用する。
 
 ## 最初の依存検証：鉄一種を通す
 
