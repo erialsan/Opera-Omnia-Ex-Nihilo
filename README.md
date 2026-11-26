@@ -8,7 +8,7 @@ title: Materia 開発環境と依存検証
 
 ## 基準構成を起動する
 
-Minecraft **1.7.10**、Forge **10.13.4.1614**、MCP **stable 12** を使う。ビルドは **JDK 25** と同梱の **Gradle 9.7.1**、GTNH settings convention **2.0.33**。生成する MOD は Jabel による Java 8 バイトコードを対象とする。GTNH のビルドツールを使うことと、ゲーム側に GTNH パックを必須にすることは別である。
+Minecraft **1.7.10**、Forge **10.13.4.1614**、MCP **stable 12** を使う。ビルドは **JDK 25** と同梱の **Gradle 9.7.1**、GTNH settings convention **2.0.33**。`gradle.properties` の `enableModernJavaSyntax = jvmDowngrader` で **JvmDowngrader** を使用する。生成する MOD のベースクラスは Java 8 向けのバイトコードに変換する。GTNH のビルドツールを使うことと、ゲーム側に GTNH パックを必須にすることは別である。
 
 1. JDK 25 で以下を実行する。初回は Gradle、ツールチェーン、Minecraft、Forge 等の取得にネット接続が必要。Git タグのない作業コピーでは開発用の版を指定する。
 
@@ -18,10 +18,14 @@ Minecraft **1.7.10**、Forge **10.13.4.1614**、MCP **stable 12** を使う。�
    ./gradlew build
    ```
 
-2. Wayland 環境に合わせ、クライアントは **`./gradlew runClient25`** でタイトルまで起動する（Java 25 実行。MOD のバイトコード対象は変更しない）。FML ログの `OreDictionary baseline: ingotIron entries=N` を探し、`N` が 1 以上であることを記録して終了する。これはロード完了時の OreDictionary エントリ数であり、素材 ID やユニークな提供元の数ではない。
+2. Wayland 環境に合わせ、クライアントは **`./gradlew runClient25`** でタイトルまで起動する（クライアントの実行環境は Java 25）。FML ログの `OreDictionary baseline: ingotIron entries=N` を探し、`N` が 1 以上であることを記録して終了する。これはロード完了時の OreDictionary エントリ数であり、素材 ID やユニークな提供元の数ではない。
 3. `./gradlew runServer` で開発用専用サーバーも起動する。初回に EULA で停止した場合は、内容に同意する場合のみ開発サーバー側で設定して再実行する。サーバーでも同じログを確認し、`stop` で終了する。本番ワールドは使わない。
 
 基準構成の実測（2026-11-25）：`build` 成功。`runClient25` で `ooen_materia@0.0.0-dev` がロードされ、`ingotIron entries=1`、シングルプレイのワールド参加まで確認した。MaterialsLib・JAOPCA は未導入。専用サーバーは未検証。
+
+## 追加予定の依存関係
+
+**BugTorch**、**ArchaicFix**、**JarJar** を依存関係に追加する予定。現時点では、いずれも `dependencies.gradle` に未登録。
 
 ## 最初の依存検証：鉄一種を通す
 
