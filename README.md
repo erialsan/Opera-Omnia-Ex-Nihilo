@@ -19,9 +19,9 @@ Minecraft **1.7.10**、Forge **10.13.4.1614**、MCP **stable 12** を使う。�
    ```
 
 2. Wayland 環境に合わせ、クライアントは **`./gradlew runClient25`** でタイトルまで起動する（クライアントの実行環境は Java 25）。FML ログの `OreDictionary baseline: ingotIron entries=N` を探し、`N` が 1 以上であることを記録して終了する。これはロード完了時の OreDictionary エントリ数であり、素材 ID やユニークな提供元の数ではない。
-3. `./gradlew runServer` で開発用専用サーバーも起動する。初回に EULA で停止した場合は、内容に同意する場合のみ開発サーバー側で設定して再実行する。サーバーでも同じログを確認し、`stop` で終了する。本番ワールドは使わない。
+3. `./gradlew runServer25` で開発用専用サーバーも起動する。初回の EULA 確認には、内容に同意する場合のみ応答する。サーバーでも同じログを確認し、`stop` で終了する。本番ワールドは使わない。
 
-Kotlin 移行前の実測（2026-11-25）：`build` 成功。`runClient25` で `ooen_materia@0.0.0-dev` がロードされ、`ingotIron entries=1`、シングルプレイのワールド参加まで確認した。MaterialsLib・JAOPCA は未導入。専用サーバーは未検証。
+Kotlin 移行後の実測（2026-11-26）：`build` と `runClient25` が成功。Forgelin が Kotlin 2.4.10 をロードし、Materia のロード完了時に `ingotIron entries=1` を確認した。MaterialsLib・JAOPCA は未導入。`runServer25` は初回の EULA 確認で停止したため、専用サーバーは未検証。
 
 ## 必須依存：Forgelin
 

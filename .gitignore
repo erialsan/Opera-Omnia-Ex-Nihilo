@@ -62,6 +62,7 @@ user.properties
 bin/
 build/
 .gradle/
+.kotlin/
 
 # Debugging #
 ## Gradle ##
