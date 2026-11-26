@@ -13,6 +13,18 @@ dependencies {
     compileOnly(kotlin("stdlib"))
 }
 
+configure<com.diffplug.gradle.spotless.SpotlessExtension> {
+    kotlin {
+        // The inherited ktfmt 0.39 cannot parse GraalVM's JDK 25 version string.
+        clearSteps()
+        toggleOffOn()
+        ktfmt().kotlinlangStyle()
+        trimTrailingWhitespace()
+        leadingTabsToSpaces(4)
+        endWithNewline()
+    }
+}
+
 // Dependencies and fixtures for the iron trials are opt-in, never part of a normal build.
 providers.gradleProperty("ooenProbe").orNull?.let { profile ->
     val probes = when (profile) {

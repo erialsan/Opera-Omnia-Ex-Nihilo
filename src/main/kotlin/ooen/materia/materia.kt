@@ -19,6 +19,9 @@ object Materia {
     @Mod.EventHandler
     fun onLoadComplete(event: FMLLoadCompleteEvent) {
         LogManager.getLogger(MOD_ID)
-            .info("OreDictionary baseline: ingotIron entries={}", OreDictionary.getOres("ingotIron").size)
+            .info(
+                "OreDictionary baseline: ingotIron entries={}",
+                OreDictionary.getOres("ingotIron").size,
+            )
     }
 }

@@ -1,5 +1,15 @@
 // Add any additional repositories for your dependencies here.
 
 repositories {
-
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Forgelin releases'
+                url = uri('https://mvn.falsepattern.com/releases')
+            }
+        }
+        filter {
+            includeModule('com.falsepattern', 'forgelin-mc1.7.10')
+        }
+    }
 }
