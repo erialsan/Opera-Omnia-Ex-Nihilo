@@ -17,7 +17,7 @@ Minecraft **1.7.10**、Forge **10.13.4.1614**、MCP **stable 12** を使う。�
    ./gradlew build
    ```
 
-2. Wayland 環境に合わせ、クライアントは **`./gradlew runClient25`** でタイトルまで起動する（クライアントの実行環境は Java 25）。JAOPCA を追加していない基準構成では、FML ログに `Materia metals: count=0 names=[]` が出る。
+2. Wayland 環境に合わせ、クライアントは **`./gradlew runClient25`** でタイトルまで起動する（クライアントの実行環境は Java 25）。JAOPCA を追加していない基準構成では、FML ログに `Materia metals: count=2 names=[Gold, Iron]` が出る。
 3. `./gradlew runServer25` で開発用専用サーバーも起動する。初回の EULA 確認には、内容に同意する場合のみ応答する。サーバーでも同じログを確認し、`stop` で終了する。本番ワールドは使わない。
 
 Kotlin 移行後の実測（2026-11-26）：`build` と `runClient25` が成功。Forgelin が Kotlin 2.4.10 をロードし、Materia のロード完了時に `ingotIron entries=1` を確認した。MaterialsLib・JAOPCA は未導入。`runServer25` は初回の EULA 確認で停止したため、専用サーバーは未検証。
@@ -40,7 +40,7 @@ GitHub の **Actions → Release → Run workflow** で対象ブランチを選�
 - [FalsePatternLib 1.12.2](https://github.com/FalsePattern/FalsePatternLib/releases/tag/1.12.2)
 - [GTNHLib 0.12.11](https://www.curseforge.com/minecraft/mc-mods/gtnhlib/files/9830849)：Fundamentum、Cribrum、Materia の必須依存。手動導入時は GTNHLib が指定する GTNHExtLib と UniMixins も入れる。
 
-金属カタログを使う場合は、実行環境に [JAOPCA 1.7.10-W.0.8.32](https://www.curseforge.com/minecraft/mc-mods/jaopca/files/8859967) を追加する。JAOPCA が無い環境ではカタログは空になる。
+金属カタログは標準構成で OreDictionary を参照する。JAOPCA の金属判定と別名を使う場合は、実行環境に [JAOPCA 1.7.10-W.0.8.32](https://www.curseforge.com/minecraft/mc-mods/jaopca/files/8859967) を追加する。
 
 Materia のホワイトリストの初期値は [同梱 JSON](../src/main/resources/ooen/materia/metal_whitelist.json) にある。既存の `config/ooen_materia.cfg` にホワイトリストがあれば、その値を使う。
 

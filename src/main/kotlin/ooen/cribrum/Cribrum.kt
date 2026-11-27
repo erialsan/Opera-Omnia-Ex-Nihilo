@@ -19,7 +19,8 @@ import ooen.netheriteIngots
     name = "Opera Omnia Ex Nihilo: Cribrum",
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
-    dependencies = "required-after:ooen_fundamentum;$GTNH_LIB_DEPENDENCY",
+    dependencies =
+        "required-after:ooen_fundamentum;required-after:ooen_malleus;required-after:ooen_materia;$GTNH_LIB_DEPENDENCY",
     modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
 )
 object Cribrum {

@@ -2,6 +2,7 @@ package ooen.materia
 
 import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent
+import cpw.mods.fml.common.event.FMLPostInitializationEvent
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.common.config.Configuration
 import ooen.BundledJson
@@ -17,7 +18,7 @@ private const val MOD_ID = "ooen_materia"
     acceptedMinecraftVersions = "[1.7.10]",
     dependencies =
         "required-after:forgelin@[2.4.3-2.4.10,);" +
-            "required-after:falsepatternlib@[1.12.2,);$GTNH_LIB_DEPENDENCY",
+            "required-after:falsepatternlib@[1.12.2,);required-after:ooen_fundamentum;$GTNH_LIB_DEPENDENCY",
     modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
 )
 object Materia {
@@ -37,6 +38,11 @@ object Materia {
             )
         )
         if (config.hasChanged()) config.save()
+    }
+
+    @Mod.EventHandler
+    fun postInit(event: FMLPostInitializationEvent) {
+        MateriaOreItems.register()
     }
 
     @Mod.EventHandler

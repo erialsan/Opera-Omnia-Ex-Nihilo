@@ -14,6 +14,8 @@ description: 鉄と銅を使った MaterialsLib・JAOPCA の検証手順、対�
 - MaterialsLib: [準備と実行の手順](materialslib-probe.md)を参照。
 - JAOPCA: [配布ファイル 8859967](https://www.curseforge.com/minecraft/mc-mods/jaopca/files/8859967)を `build/probe-jaopca/JAOPCA-1.7.10-W.0.8.32.jar` に置き、`./gradlew runClient25 -PooenProbe=jaopca -PjaopcaCase=reuse` を実行する。Gradle が SHA-256 の照合と逆難読化を行う。`generate` と `exclude` も指定できる。`MATERIA_IRON_CANDIDATES_PASS` は実際の登録品からの候補取得を示す。
 
+現行の `exclude` では、検証用 JAOPCA モジュールが除外した鉱石塵を Materia が補う。検証では Materia のアイテム1点と、JAOPCA 側の生成・検証用レシピが0件であることを区別する。
+
 JAOPCA `reuse` の実測（2026-11-26、開発クライアント・GTNH パックなし）：鉄の鉱石砂利は既存品を再利用し、砂と粉は各 1 種を生成した。三形態とも対応するレシピは 1 件。ただし対照試験では別フェーズから同じキーで再登録したレシピが 2 件になった。また、早期の別名は別素材になり、遅延した別名は OreDictionary に届いたが素材としては認識されなかった。この実測は JAOPCA 側の試験で、追加した Materia の候補取得アサーションを含まない。Materia 本体は画面を起動せず Forge の OreDictionary を使って確認し、未登録キーを作らないこと、後から登録した複数候補を拾うこと、ワイルドカードを除外し元のスタックや NBT を変更しないことを確認した。
 
 MaterialsLib 単体の実測（2026-11-27、開発クライアント・GTNH パックなし・GTNHLib 0.12.10）は [検証結果](materialslib-probe.md#実測) を参照。外部の利用側 MOD が鉄を ID 26 で取得できた。二つ目のレジストリを名前で問い合わせると一つ目が返り、名前空間の分離に失敗した。

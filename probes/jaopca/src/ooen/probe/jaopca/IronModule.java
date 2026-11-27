@@ -142,13 +142,15 @@ public class IronModule implements IModule {
             String expectedId = reused
                 ? IronProvider.ID + ":existing_" + IronProvider.METAL_ID + "_gravel@0"
                 : "jaopca:" + form.name + "." + IronProvider.METAL_ID + "@0";
+            String registeredId = excluded(form)
+                ? "ooen_materia:" + IronProvider.METAL_ID + "_ore_dust@0" : expectedId;
             boolean keySeen = api.getRecipes().contains(key(i));
             IronProvider.LOG.info("phase=loadComplete form={} ore={} entries={} ids={} generated={} itemDuplicates={} input={} matchedRecipes={} results={} recipeDuplicates={} keySeen={}",
-                form.name, ore(i), ids.size(), ids, generated, Math.max(0, ids.size() - expected), ore(i - 1),
+                form.name, ore(i), ids.size(), ids, generated, Math.max(0, ids.size() - 1), ore(i - 1),
                 results.size(), results, Math.max(0, results.size() - expected), keySeen);
-            require(ids.size() == expected && results.size() == expected && keySeen == (expected == 1)
-                && generated == (reused ? 0 : expected) && (expected == 0 || (ids.get(0).equals(expectedId)
-                && results.get(0).equals(expectedId))), "form/recipe mismatch for " + form.name);
+            require(ids.size() == 1 && ids.get(0).equals(registeredId) && results.size() == expected
+                && keySeen == (expected == 1) && generated == (reused ? 0 : expected)
+                && (expected == 0 || results.get(0).equals(expectedId)), "form/recipe mismatch for " + form.name);
             verifyMateriaCandidates(form.metalForm, ids.toArray(new String[0]));
         }
         List<String> control = craft(new ItemStack(Items.flint));

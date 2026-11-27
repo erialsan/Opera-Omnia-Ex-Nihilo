@@ -5,6 +5,8 @@ import net.minecraft.block.Block
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import ooen.BundledJson
+import ooen.materia.MetalCatalog
+import ooen.materia.MetalForm
 
 internal object SieveRecipes {
     private const val RESOURCE = "/ooen/cribrum/sieve_drops.json"
@@ -16,7 +18,7 @@ internal object SieveRecipes {
     fun load() {
         drops =
             BundledJson.readArray(RESOURCE)
-                .mapIndexed { index, element ->
+                .mapIndexedNotNull { index, element ->
                     try {
                         val row = element.asJsonObject
                         val inputId = row.get("input").asString
@@ -28,14 +30,23 @@ internal object SieveRecipes {
                             "Input block has no item: $inputId"
                         }
                         val tier = MeshTier.valueOf(row.get("minimumTier").asString)
-                        val outputId = row.get("output").asString
                         val output =
-                            requireNotNull(Item.itemRegistry.getObject(outputId) as? Item) {
-                                "Unknown output item: $outputId"
+                            if (row.has("metal")) {
+                                val metal = row.get("metal").asString
+                                val form = MetalForm.valueOf(row.get("form").asString)
+                                MetalCatalog.candidates(metal, form).firstOrNull()
+                                    ?: return@mapIndexedNotNull null
+                            } else {
+                                val outputId = row.get("output").asString
+                                val item =
+                                    requireNotNull(Item.itemRegistry.getObject(outputId) as? Item) {
+                                        "Unknown output item: $outputId"
+                                    }
+                                ItemStack(item)
                             }
                         val percent = row.get("percent").asBigDecimal.intValueExact()
                         require(percent in 1..100) { "percent must be from 1 to 100" }
-                        input to Drop(tier, ItemStack(output), percent)
+                        input to Drop(tier, output, percent)
                     } catch (exception: RuntimeException) {
                         throw IllegalArgumentException(
                             "$RESOURCE, entry ${index + 1}: ${exception.message}",

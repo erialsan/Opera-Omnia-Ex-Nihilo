@@ -1,0 +1,23 @@
+[
+  { "metal": "Iron", "rgb": "d9cbc0" },
+  { "metal": "Gold", "rgb": "ffd458" },
+  { "metal": "Copper", "rgb": "e89165" },
+  { "metal": "Tin", "rgb": "c8dce9" },
+  { "metal": "Aluminum", "rgb": "b9cbd9" },
+  { "metal": "Aluminium", "rgb": "b9cbd9" },
+  { "metal": "Lead", "rgb": "827395" },
+  { "metal": "Nickel", "rgb": "d0c597" },
+  { "metal": "Silver", "rgb": "dfeaff" },
+  { "metal": "Cobalt", "rgb": "5e97e1" },
+  { "metal": "Ardite", "rgb": "f38e51" },
+  { "metal": "Osmium", "rgb": "94afd9" },
+  { "metal": "Iridium", "rgb": "e1d9ed" },
+  { "metal": "Tungsten", "rgb": "727f86" },
+  { "metal": "Boron", "rgb": "adada1" },
+  { "metal": "Uranium", "rgb": "7db257" },
+  { "metal": "Platinum", "rgb": "f1e7bc" },
+  { "metal": "Manganese", "rgb": "c0a9b6" },
+  { "metal": "Titanium", "rgb": "dbb7df" },
+  { "metal": "Mithril", "rgb": "80d5de" },
+  { "metal": "Thorium", "rgb": "87a18b" }
+]
