@@ -1,6 +1,6 @@
 package ooen.cribrum
 
-// Ordinals are stored in item metadata and saved sieves. Add new tiers at the end.
+// Item metadata and saved sieves use enum ordinals.
 internal enum class MeshTier(val key: String, val color: Int) {
     STRING("string_mesh", 0xFFFFFF),
     FLINT("flint_mesh", 0x777C84),

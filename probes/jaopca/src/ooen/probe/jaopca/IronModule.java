@@ -32,10 +32,24 @@ import thelm.jaopca.api.modules.JAOPCAModule;
 
 @JAOPCAModule
 public class IronModule implements IModule {
-    private static final String[] NAMES = {"ooen_gravel", "ooen_sand", "ooen_powder"};
-    private static final String[] PREFIXES = {"ooenOreGravel", "ooenOreSand", "ooenOrePowder"};
-    private static final MetalForm[] FORMS = {MetalForm.GRAVEL, MetalForm.SAND, MetalForm.POWDER};
+    private static final ProbeForm[] FORMS = ProbeForm.values();
     private static final String RETRY = "ooen_probe:phase_retry";
+
+    private enum ProbeForm {
+        GRAVEL("ooen_gravel", "ooenOreGravel", MetalForm.GRAVEL),
+        SAND("ooen_sand", "ooenOreSand", MetalForm.SAND),
+        POWDER("ooen_powder", "ooenOrePowder", MetalForm.POWDER);
+
+        final String name;
+        final String orePrefix;
+        final MetalForm metalForm;
+
+        ProbeForm(String name, String orePrefix, MetalForm metalForm) {
+            this.name = name;
+            this.orePrefix = orePrefix;
+            this.metalForm = metalForm;
+        }
+    }
 
     @Override
     public String getName() {
@@ -51,12 +65,12 @@ public class IronModule implements IModule {
     public List<IFormRequest> getFormRequests() {
         JAOPCAApi api = JAOPCAApi.instance();
         List<IFormRequest> requests = new ArrayList<>();
-        for (int i = 0; i < NAMES.length; i++) {
+        for (ProbeForm spec : FORMS) {
             List<String> excluded = new ArrayList<>();
             for (IMaterial material : api.getMaterials()) {
-                if (!material.getName().equals(IronProvider.METAL) || excluded(i)) excluded.add(material.getName());
+                if (!material.getName().equals(IronProvider.METAL) || excluded(spec)) excluded.add(material.getName());
             }
-            IForm form = api.newForm(this, NAMES[i], api.itemFormType()).setSecondaryName(PREFIXES[i])
+            IForm form = api.newForm(this, spec.name, api.itemFormType()).setSecondaryName(spec.orePrefix)
                 .setMaterialTypes(MaterialType.INGOT).setDefaultMaterialBlacklist(excluded);
             // Independent requests: an existing gravel stack must not force the group to regenerate gravel.
             requests.add(form.toRequest());
@@ -64,16 +78,16 @@ public class IronModule implements IModule {
         return requests;
     }
 
-    private static boolean excluded(int i) {
-        return i == 2 && IronProvider.CASE.equals("exclude");
+    private static boolean excluded(ProbeForm form) {
+        return form == ProbeForm.POWDER && IronProvider.CASE.equals("exclude");
     }
 
     private static String ore(int i) {
-        return i < 0 ? "ore" + IronProvider.METAL : PREFIXES[i] + IronProvider.METAL;
+        return (i < 0 ? "ore" : FORMS[i].orePrefix) + IronProvider.METAL;
     }
 
     private static String key(int i) {
-        return "ooen_probe:" + NAMES[i] + "." + IronProvider.METAL_ID;
+        return "ooen_probe:" + FORMS[i].name + "." + IronProvider.METAL_ID;
     }
 
     @Override
@@ -85,8 +99,8 @@ public class IronModule implements IModule {
         IronProvider.LOG.info("phase=init name={} type={} ore={} earlyAliasMaterial={} sameAsTarget={} alternatives={}",
             metal.getName(), metal.getType(), api.getOredict().contains(ore(-1)), alias != null,
             alias == metal, metal.getAlternativeNames());
-        for (int i = 0; i < NAMES.length; i++) {
-            if (excluded(i)) continue;
+        for (int i = 0; i < FORMS.length; i++) {
+            if (excluded(FORMS[i])) continue;
             // Strings resolve even when JAOPCA skipped generating a form because another provider owns it.
             boolean first = api.registerShapelessRecipe(key(i), ore(i), 1, ore(i - 1), Items.paper);
             boolean duplicate = api.registerShapelessRecipe(key(i), ore(i), 1, ore(i - 1), Items.paper);
@@ -114,27 +128,28 @@ public class IronModule implements IModule {
         IronProvider.LOG.info("phase=loadComplete lateOreKnown={} lateIngotKnown={} lateMaterial={}",
             lateOre, lateIngot, api.getMaterial(lateAlias) != null);
         require(lateOre && lateIngot, "late registrations did not reach JAOPCA's OreDictionary listener");
-        for (int i = 0; i < NAMES.length; i++) {
-            boolean reused = i == 0 && IronProvider.gravel != null;
-            int expected = excluded(i) ? 0 : 1;
+        for (int i = 0; i < FORMS.length; i++) {
+            ProbeForm form = FORMS[i];
+            boolean reused = form == ProbeForm.GRAVEL && IronProvider.gravel != null;
+            int expected = excluded(form) ? 0 : 1;
             List<ItemStack> stacks = OreDictionary.getOres(ore(i), false);
             List<String> ids = new ArrayList<>();
             for (ItemStack stack : stacks) ids.add(id(stack));
             List<ItemStack> inputs = OreDictionary.getOres(ore(i - 1), false);
             require(!inputs.isEmpty(), "missing recipe input " + ore(i - 1));
             List<String> results = craft(inputs.get(0));
-            int generated = api.getForm(NAMES[i]).getMaterials().size();
+            int generated = api.getForm(form.name).getMaterials().size();
             String expectedId = reused
                 ? IronProvider.ID + ":existing_" + IronProvider.METAL_ID + "_gravel@0"
-                : "jaopca:" + NAMES[i] + "." + IronProvider.METAL_ID + "@0";
+                : "jaopca:" + form.name + "." + IronProvider.METAL_ID + "@0";
             boolean keySeen = api.getRecipes().contains(key(i));
             IronProvider.LOG.info("phase=loadComplete form={} ore={} entries={} ids={} generated={} itemDuplicates={} input={} matchedRecipes={} results={} recipeDuplicates={} keySeen={}",
-                NAMES[i], ore(i), ids.size(), ids, generated, Math.max(0, ids.size() - expected), ore(i - 1),
+                form.name, ore(i), ids.size(), ids, generated, Math.max(0, ids.size() - expected), ore(i - 1),
                 results.size(), results, Math.max(0, results.size() - expected), keySeen);
             require(ids.size() == expected && results.size() == expected && keySeen == (expected == 1)
                 && generated == (reused ? 0 : expected) && (expected == 0 || (ids.get(0).equals(expectedId)
-                && results.get(0).equals(expectedId))), "form/recipe mismatch for " + NAMES[i]);
-            verifyMateriaCandidates(FORMS[i], ids.toArray(new String[0]));
+                && results.get(0).equals(expectedId))), "form/recipe mismatch for " + form.name);
+            verifyMateriaCandidates(form.metalForm, ids.toArray(new String[0]));
         }
         List<String> control = craft(new ItemStack(Items.flint));
         String controlId = id(new ItemStack(IronProvider.secondIngot));

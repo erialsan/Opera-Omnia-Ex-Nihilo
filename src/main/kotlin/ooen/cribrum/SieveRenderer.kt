@@ -2,17 +2,24 @@ package ooen.cribrum
 
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
+import net.minecraft.init.Blocks
 import ooen.client.OpenBlockRenderer
 import ooen.client.OpenBlockRenderer.Part
+import ooen.client.OpenBlockRenderer.Surface
 
 @SideOnly(Side.CLIENT)
 internal object SieveRenderer {
     fun register(): Int =
         OpenBlockRenderer.register(frame, INNER_MIN, INNER_MAX) { block, world, x, y, z, metadata ->
-            val icon = (block as Sieve).surfaceIcon(world, x, y, z, metadata)
-            icon?.let {
-                val height = if (metadata == MESH) MESH_HEIGHT else DIRT_HEIGHT
-                OpenBlockRenderer.Surface(it, height, doubleSided = true)
+            when (metadata) {
+                FRAME -> null
+                MESH ->
+                    Surface(
+                        (block as Sieve).installedMeshIcon(world, x, y, z),
+                        MESH_HEIGHT,
+                        doubleSided = true,
+                    )
+                else -> Surface(Blocks.dirt.getIcon(1, 0), DIRT_HEIGHT, doubleSided = true)
             }
         }
 

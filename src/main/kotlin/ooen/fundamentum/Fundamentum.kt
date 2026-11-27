@@ -87,16 +87,18 @@ object Fundamentum {
         if (event.world.isRemote || player.capabilities.isCreativeMode || tool.item != crook) return
         if (event.isSilkTouching) return
 
-        if (event.block == infestedLeaves) {
-            if (infestedLeaves.isMature(event.blockMetadata)) {
-                event.drops.add(ItemStack(Items.string, 2))
-                if (tool.itemDamage % 4 == 0) event.drops.add(ItemStack(larva))
+        val drop =
+            if (event.block == infestedLeaves) {
+                if (infestedLeaves.isMature(event.blockMetadata)) ItemStack(Items.string, 2)
+                else null
+            } else {
+                val item = Item.getItemFromBlock(event.block) ?: return
+                val leaf = ItemStack(item, 1, event.block.damageDropped(event.blockMetadata))
+                if (!matchesOre(leaf, "treeLeaves")) return
+                leaf
             }
-        } else {
-            val item = Item.getItemFromBlock(event.block) ?: return
-            val leaf = ItemStack(item, 1, event.block.damageDropped(event.blockMetadata))
-            if (!matchesOre(leaf, "treeLeaves")) return
-            event.drops.add(leaf)
+        if (drop != null) {
+            event.drops.add(drop)
             // Give a new crook a reliable first larva, then one every four harvests.
             if (tool.itemDamage % 4 == 0) event.drops.add(ItemStack(larva))
         }

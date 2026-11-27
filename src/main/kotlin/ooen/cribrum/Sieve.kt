@@ -16,7 +16,7 @@ import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import ooen.fundamentum.VanillaWood
 
-private const val FRAME = 0
+internal const val FRAME = 0
 internal const val MESH = 1
 private const val LOADED = 2
 private const val LAST_PASS = 4
@@ -78,46 +78,45 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
     ): Boolean {
         val stage = world.getBlockMetadata(x, y, z)
         val held = player.currentEquippedItem
+        fun changeStage(next: Int): Boolean =
+            !world.isRemote && world.setBlockMetadataWithNotify(x, y, z, next, 3)
+
         if (stage in MESH..LAST_PASS && player.isSneaking && held == null) {
             val tier = installedTier(world, x, y, z)
-            if (!world.isRemote && world.setBlockMetadataWithNotify(x, y, z, FRAME, 3)) {
-                val recovered = ItemStack(mesh, 1, tier.ordinal)
-                (world.getTileEntity(x, y, z) as? SieveMeshData)?.install(MeshTier.STRING)
-                if (!player.inventory.addItemStackToInventory(recovered)) {
-                    dropBlockAsItem(world, x, y, z, recovered)
-                }
-                if (stage >= LOADED) {
-                    val dirt = ItemStack(Blocks.dirt)
-                    if (!player.inventory.addItemStackToInventory(dirt)) {
-                        dropBlockAsItem(world, x, y, z, dirt)
+            if (changeStage(FRAME)) {
+                meshData(world, x, y, z)?.install(MeshTier.STRING)
+                for (stack in contents(stage, tier)) {
+                    if (!player.inventory.addItemStackToInventory(stack)) {
+                        dropBlockAsItem(world, x, y, z, stack)
                     }
                 }
             }
             return true
         }
-        val inserted = if (held?.item == mesh) MeshTier.entries.getOrNull(held.itemDamage) else null
-        val meshData = if (stage == FRAME) world.getTileEntity(x, y, z) as? SieveMeshData else null
-        val next =
-            when (stage) {
-                FRAME ->
-                    if (inserted?.isAvailable() == true && meshData != null) MESH else return false
-                MESH ->
-                    if (held?.item == Item.getItemFromBlock(Blocks.dirt) && held.itemDamage == 0) {
-                        LOADED
-                    } else return false
-                in LOADED until LAST_PASS -> stage + 1
-                LAST_PASS -> MESH
-                else -> return false
-            }
-        if (!world.isRemote && world.setBlockMetadataWithNotify(x, y, z, next, 3)) {
-            when (stage) {
-                FRAME -> {
-                    meshData!!.install(inserted!!)
-                    if (!player.capabilities.isCreativeMode) held!!.stackSize--
+        when (stage) {
+            FRAME -> {
+                if (held == null || held.item != mesh) return false
+                val tier = MeshTier.entries.getOrNull(held.itemDamage) ?: return false
+                if (!tier.isAvailable()) return false
+                val data = meshData(world, x, y, z) ?: return false
+                if (changeStage(MESH)) {
+                    data.install(tier)
+                    if (!player.capabilities.isCreativeMode) held.stackSize--
                 }
-                MESH -> if (!player.capabilities.isCreativeMode) held!!.stackSize--
-                LAST_PASS -> dropBlockAsItem(world, x, y, z, ItemStack(Items.wheat_seeds))
-                else ->
+            }
+            MESH -> {
+                if (
+                    held == null ||
+                        held.item != Item.getItemFromBlock(Blocks.dirt) ||
+                        held.itemDamage != 0
+                ) {
+                    return false
+                }
+                if (changeStage(LOADED) && !player.capabilities.isCreativeMode) held.stackSize--
+            }
+            in LOADED until LAST_PASS -> {
+                val next = stage + 1
+                if (changeStage(next)) {
                     player.addChatComponentMessage(
                         ChatComponentTranslation(
                             "ooen.sieve.progress",
@@ -125,7 +124,12 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
                             LAST_PASS - LOADED + 1,
                         )
                     )
+                }
             }
+            LAST_PASS -> {
+                if (changeStage(MESH)) dropBlockAsItem(world, x, y, z, ItemStack(Items.wheat_seeds))
+            }
+            else -> return false
         }
         return true
     }
@@ -139,9 +143,13 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
         fortune: Int,
     ): ArrayList<ItemStack> =
         arrayListOf(ItemStack(this)).apply {
-            if (metadata >= MESH) add(ItemStack(mesh, 1, installedTier(world, x, y, z).ordinal))
-            if (metadata >= LOADED) add(ItemStack(Blocks.dirt))
+            if (metadata >= MESH) addAll(contents(metadata, installedTier(world, x, y, z)))
         }
+
+    private fun contents(stage: Int, tier: MeshTier): List<ItemStack> = buildList {
+        add(ItemStack(mesh, 1, tier.ordinal))
+        if (stage >= LOADED) add(ItemStack(Blocks.dirt))
+    }
 
     @SideOnly(Side.CLIENT)
     override fun registerBlockIcons(register: IIconRegister) {
@@ -154,13 +162,12 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
         Blocks.planks.getIcon(side, wood.metadata)
 
     @SideOnly(Side.CLIENT)
-    fun surfaceIcon(world: IBlockAccess, x: Int, y: Int, z: Int, metadata: Int): IIcon? =
-        when {
-            metadata == FRAME -> null
-            metadata == MESH -> meshIcons[installedTier(world, x, y, z).ordinal]
-            else -> Blocks.dirt.getIcon(1, 0)
-        }
+    fun installedMeshIcon(world: IBlockAccess, x: Int, y: Int, z: Int): IIcon =
+        meshIcons[installedTier(world, x, y, z).ordinal]
 
     private fun installedTier(world: IBlockAccess, x: Int, y: Int, z: Int): MeshTier =
-        (world.getTileEntity(x, y, z) as? SieveMeshData)?.tier ?: MeshTier.STRING
+        meshData(world, x, y, z)?.tier ?: MeshTier.STRING
+
+    private fun meshData(world: IBlockAccess, x: Int, y: Int, z: Int): SieveMeshData? =
+        world.getTileEntity(x, y, z) as? SieveMeshData
 }

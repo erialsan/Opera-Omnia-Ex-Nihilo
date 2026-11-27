@@ -30,7 +30,7 @@ internal class StringMesh : Item() {
         "item.ooen." + (MeshTier.entries.getOrNull(stack.itemDamage) ?: MeshTier.STRING).key
 
     @SideOnly(Side.CLIENT)
-    override fun getSubItems(item: Item, tab: CreativeTabs, items: MutableList<ItemStack>) {
+    override fun getSubItems(item: Item, tab: CreativeTabs?, items: MutableList<ItemStack>) {
         for (tier in MeshTier.entries) {
             if (tier.isAvailable()) items.add(ItemStack(item, 1, tier.ordinal))
         }
