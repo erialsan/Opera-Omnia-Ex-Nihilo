@@ -8,8 +8,8 @@ import ooen.client.OpenBlockRenderer.Part
 @SideOnly(Side.CLIENT)
 internal object SieveRenderer {
     fun register(): Int =
-        OpenBlockRenderer.register(frame, INNER_MIN, INNER_MAX) { block, metadata ->
-            val icon = (block as Sieve).surfaceIcon(metadata)
+        OpenBlockRenderer.register(frame, INNER_MIN, INNER_MAX) { block, world, x, y, z, metadata ->
+            val icon = (block as Sieve).surfaceIcon(world, x, y, z, metadata)
             icon?.let {
                 val height = if (metadata == MESH) MESH_HEIGHT else DIRT_HEIGHT
                 OpenBlockRenderer.Surface(it, height, doubleSided = true)

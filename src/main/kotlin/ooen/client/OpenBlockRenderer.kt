@@ -17,7 +17,7 @@ private constructor(
     private val parts: List<Part>,
     private val innerMin: Double,
     private val innerMax: Double,
-    private val surfaceAt: (Block, Int) -> Surface?,
+    private val surfaceAt: (Block, IBlockAccess, Int, Int, Int, Int) -> Surface?,
 ) : ISimpleBlockRenderingHandler {
     override fun getRenderId(): Int = id
 
@@ -40,7 +40,7 @@ private constructor(
                 renderer.renderStandardBlock(block, x, y, z)
             }
             val metadata = world.getBlockMetadata(x, y, z)
-            val surface = surfaceAt(block, metadata) ?: return true
+            val surface = surfaceAt(block, world, x, y, z, metadata) ?: return true
             val height = surface.height
             renderer.setRenderBounds(innerMin, height, innerMin, innerMax, height, innerMax)
             val tessellator = Tessellator.instance
@@ -101,7 +101,7 @@ private constructor(
             parts: List<Part>,
             innerMin: Double,
             innerMax: Double,
-            surfaceAt: (Block, Int) -> Surface?,
+            surfaceAt: (Block, IBlockAccess, Int, Int, Int, Int) -> Surface?,
         ): Int {
             val id = RenderingRegistry.getNextAvailableRenderId()
             RenderingRegistry.registerBlockHandler(

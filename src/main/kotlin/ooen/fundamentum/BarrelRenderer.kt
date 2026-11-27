@@ -11,7 +11,7 @@ import ooen.client.OpenBlockRenderer.Surface
 @SideOnly(Side.CLIENT)
 internal object BarrelRenderer {
     fun register(): Int =
-        OpenBlockRenderer.register(parts, INNER_MIN, INNER_MAX) { _, fill ->
+        OpenBlockRenderer.register(parts, INNER_MIN, INNER_MAX) { _, _, _, _, _, fill ->
             val height =
                 FLOOR_TOP +
                     (FILL_TOP - FLOOR_TOP) * fill.coerceAtMost(COMPOST_CAPACITY) / COMPOST_CAPACITY

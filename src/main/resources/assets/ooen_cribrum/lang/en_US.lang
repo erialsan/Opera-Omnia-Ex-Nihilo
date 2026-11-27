@@ -1,4 +1,10 @@
 item.ooen.string_mesh.name=String Mesh
+item.ooen.flint_mesh.name=Flint Mesh
+item.ooen.iron_mesh.name=Iron Mesh
+item.ooen.gold_mesh.name=Gold Mesh
+item.ooen.diamond_mesh.name=Diamond Mesh
+item.ooen.emerald_mesh.name=Emerald Mesh
+item.ooen.netherite_mesh.name=Netherite Mesh
 tile.ooen.sieve.name=Oak Sieve
 tile.ooen.sieve_spruce.name=Spruce Sieve
 tile.ooen.sieve_birch.name=Birch Sieve

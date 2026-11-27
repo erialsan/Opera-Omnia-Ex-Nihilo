@@ -1,4 +1,10 @@
 item.ooen.string_mesh.name=糸のメッシュ
+item.ooen.flint_mesh.name=火打ち石のメッシュ
+item.ooen.iron_mesh.name=鉄のメッシュ
+item.ooen.gold_mesh.name=金のメッシュ
+item.ooen.diamond_mesh.name=ダイヤモンドのメッシュ
+item.ooen.emerald_mesh.name=エメラルドのメッシュ
+item.ooen.netherite_mesh.name=ネザライトのメッシュ
 tile.ooen.sieve.name=オークの篩
 tile.ooen.sieve_spruce.name=マツの篩
 tile.ooen.sieve_birch.name=シラカバの篩
