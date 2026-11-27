@@ -1,6 +1,13 @@
 item.ooen.crook.name=Wooden Crook
 item.ooen.silkworm.name=Silkworm
 tile.ooen.infested_leaves.name=Silkworm Leaves
-tile.ooen.barrel.name=Compost Barrel
+ooen.infested_leaves.progress=Leaf infestation: %s%%
+tile.ooen.barrel.name=Oak Compost Barrel
+tile.ooen.barrel_spruce.name=Spruce Compost Barrel
+tile.ooen.barrel_birch.name=Birch Compost Barrel
+tile.ooen.barrel_jungle.name=Jungle Compost Barrel
+tile.ooen.barrel_acacia.name=Acacia Compost Barrel
+tile.ooen.barrel_dark_oak.name=Dark Oak Compost Barrel
 ooen.barrel.fill=Compost barrel: %s/%s leaves.
 ooen.barrel.working=The leaves are composting.
+ooen.barrel.ready=Compost is ready. Right-click with an empty hand to collect dirt.

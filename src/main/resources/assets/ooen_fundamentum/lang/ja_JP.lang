@@ -1,6 +1,13 @@
 item.ooen.crook.name=木のクローク
 item.ooen.silkworm.name=蚕蛾の幼虫
 tile.ooen.infested_leaves.name=虫食いの葉
-tile.ooen.barrel.name=堆肥バレル
+ooen.infested_leaves.progress=虫食いの進行度：%s%%
+tile.ooen.barrel.name=オークの堆肥バレル
+tile.ooen.barrel_spruce.name=マツの堆肥バレル
+tile.ooen.barrel_birch.name=シラカバの堆肥バレル
+tile.ooen.barrel_jungle.name=ジャングルの木の堆肥バレル
+tile.ooen.barrel_acacia.name=アカシアの堆肥バレル
+tile.ooen.barrel_dark_oak.name=ダークオークの堆肥バレル
 ooen.barrel.fill=堆肥バレル：葉 %s/%s
 ooen.barrel.working=葉を堆肥にしています。
+ooen.barrel.ready=堆肥ができました。素手で右クリックすると土を回収できます。

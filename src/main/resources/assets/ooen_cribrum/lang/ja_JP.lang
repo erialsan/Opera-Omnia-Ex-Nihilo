@@ -1,3 +1,8 @@
 item.ooen.string_mesh.name=糸のメッシュ
-tile.ooen.sieve.name=木の篩
+tile.ooen.sieve.name=オークの篩
+tile.ooen.sieve_spruce.name=マツの篩
+tile.ooen.sieve_birch.name=シラカバの篩
+tile.ooen.sieve_jungle.name=ジャングルの木の篩
+tile.ooen.sieve_acacia.name=アカシアの篩
+tile.ooen.sieve_dark_oak.name=ダークオークの篩
 ooen.sieve.progress=土を篩っています：%s/%s

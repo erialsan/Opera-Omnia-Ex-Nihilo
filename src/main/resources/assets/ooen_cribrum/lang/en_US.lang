@@ -1,3 +1,8 @@
 item.ooen.string_mesh.name=String Mesh
-tile.ooen.sieve.name=Wooden Sieve
+tile.ooen.sieve.name=Oak Sieve
+tile.ooen.sieve_spruce.name=Spruce Sieve
+tile.ooen.sieve_birch.name=Birch Sieve
+tile.ooen.sieve_jungle.name=Jungle Sieve
+tile.ooen.sieve_acacia.name=Acacia Sieve
+tile.ooen.sieve_dark_oak.name=Dark Oak Sieve
 ooen.sieve.progress=Sifting dirt: %s/%s.

@@ -17,3 +17,5 @@ description: 同梱テクスチャの作者、出所、適用ライセンス。
 - 蚕蛾の幼虫 → [Creatio の `silkworm.png`](https://github.com/BloodyMods/ExNihiloCreatio/blob/75f60692a4257a62ba9f6831866e456d8526ec9d/src/main/resources/assets/exnihilocreatio/textures/items/silkworm.png)
 
 糸のメッシュはクライアントで白い羊毛のテクスチャから格子を生成する。生成した格子を、アイテムアイコンと篩に張った状態の上面に使う。
+
+木製バレルは Creatio の木製バレルと同じく、木材に対応するバニラの板材テクスチャを使う。[Creatio の木製バレルモデル](https://github.com/BloodyMods/ExNihiloCreatio/blob/75f60692a4257a62ba9f6831866e456d8526ec9d/src/main/resources/assets/exnihilocreatio/models/block/block_barrel0.json)

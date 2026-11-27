@@ -14,18 +14,18 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.ChatComponentTranslation
 import net.minecraft.util.IIcon
 import net.minecraft.world.World
+import ooen.fundamentum.VanillaWood
 
 private const val FRAME = 0
 private const val MESH = 1
 private const val LOADED = 2
 private const val LAST_PASS = 4
 
-internal class Sieve(private val mesh: Item) : Block(Material.wood) {
+internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Block(Material.wood) {
     private lateinit var meshIcon: IIcon
 
     init {
-        setBlockName("ooen.sieve")
-        setBlockTextureName("minecraft:planks_oak")
+        setBlockName("ooen.sieve" + wood.suffix)
         setCreativeTab(CreativeTabs.tabBlock)
         setHardness(1.5f)
         setStepSound(soundTypeWood)
@@ -93,14 +93,13 @@ internal class Sieve(private val mesh: Item) : Block(Material.wood) {
 
     @SideOnly(Side.CLIENT)
     override fun registerBlockIcons(register: IIconRegister) {
-        super.registerBlockIcons(register)
         meshIcon = registerMeshIcon(register, "minecraft:wool_colored_white")
     }
 
     @SideOnly(Side.CLIENT)
     override fun getIcon(side: Int, metadata: Int): IIcon =
         when {
-            side != 1 || metadata == FRAME -> super.getIcon(side, metadata)
+            side != 1 || metadata == FRAME -> Blocks.planks.getIcon(side, wood.metadata)
             metadata == MESH -> meshIcon
             else -> Blocks.dirt.getIcon(side, 0)
         }

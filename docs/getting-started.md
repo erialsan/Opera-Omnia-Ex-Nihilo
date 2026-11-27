@@ -34,6 +34,8 @@ Kotlin 移行後の実測（2026-11-26）：`build` と `runClient25` が成功�
 
 ## 開発用の依存関係
 
+開発環境では GTNH Maven の Waila 1.19.34 を使う。配布環境では任意で導入でき、虫食いの進行度と堆肥バレルの状態を照準先の表示で確認できる。[Waila の配布元](https://github.com/GTNewHorizons/waila)
+
 `dependencies.gradle` で **BugTorch 1.3.1** と **ArchaicFix 0.8.0** を Modrinth Maven から、**JarJar 0.4.2-beta** を GTNH Maven から取得する。いずれも `runtimeOnlyNonPublishable` で開発環境の実行時に使う。
 
 EndlessIDs 1.7.1 と ChunkAPI 0.8.1 も開発環境の実行時だけに追加する。この組み合わせは [ArchaicFix 0.8.0 のコンパイル時依存](https://github.com/embeddedt/ArchaicFix/blob/0.8.0/dependencies.gradle) に合わせている。ChunkAPI 0.5.1 には ArchaicFix の照明処理が呼び出す `registerDataManager(DataManager, int)` がなく、起動時に `NoSuchMethodError` になる。EndlessIDs 1.5-beta0003 は ChunkAPI 0.6.0 未満を要求するため、ChunkAPI だけは更新できない。配布版 Materia の必須依存ではない。

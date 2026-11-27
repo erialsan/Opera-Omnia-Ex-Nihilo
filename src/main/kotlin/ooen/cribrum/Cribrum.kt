@@ -4,9 +4,11 @@ import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.registry.GameRegistry
 import net.minecraft.creativetab.CreativeTabs
+import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraftforge.oredict.ShapedOreRecipe
+import ooen.fundamentum.VanillaWood
 import ooen.materia.Tags
 
 @Mod(
@@ -24,9 +26,7 @@ object Cribrum {
             StringMesh()
                 .setUnlocalizedName("ooen.string_mesh")
                 .setCreativeTab(CreativeTabs.tabMaterials)
-        val sieve = Sieve(mesh)
         GameRegistry.registerItem(mesh, "string_mesh")
-        GameRegistry.registerBlock(sieve, "sieve")
         GameRegistry.addRecipe(
             ShapedOreRecipe(
                 ItemStack(mesh),
@@ -39,17 +39,21 @@ object Cribrum {
                 Items.stick,
             )
         )
-        GameRegistry.addRecipe(
-            ShapedOreRecipe(
-                ItemStack(sieve),
-                "P P",
-                "PPP",
-                "S S",
-                'P',
-                "plankWood",
-                'S',
-                Items.stick,
+        for (wood in VanillaWood.entries) {
+            val sieve = Sieve(mesh, wood)
+            GameRegistry.registerBlock(sieve, "sieve" + wood.suffix)
+            GameRegistry.addRecipe(
+                ShapedOreRecipe(
+                    ItemStack(sieve),
+                    "P P",
+                    "PPP",
+                    "S S",
+                    'P',
+                    ItemStack(Blocks.planks, 1, wood.metadata),
+                    'S',
+                    Items.stick,
+                )
             )
-        )
+        }
     }
 }

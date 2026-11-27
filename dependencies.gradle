@@ -35,6 +35,7 @@
  */
 dependencies {
     compileOnly("curse.maven:jaopca-266936:8859967") { transitive = false } // JAOPCA 1.7.10-W.0.8.32
+    devOnlyNonPublishable("com.github.GTNewHorizons:waila:1.19.34:dev") { transitive = false }
     runtimeOnlyNonPublishable("com.falsepattern:forgelin-mc1.7.10:2.4.3-2.4.10:dev") { transitive = false }
     runtimeOnlyNonPublishable("com.falsepattern:falsepatternlib-mc1.7.10:1.12.2:dev")
     implementation("com.github.GTNewHorizons:GTNHLib:0.12.10:dev")

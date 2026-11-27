@@ -1,20 +1,23 @@
 package ooen.fundamentum
 
 import cpw.mods.fml.common.Mod
+import cpw.mods.fml.common.event.FMLInterModComms
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.registry.GameRegistry
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.creativetab.CreativeTabs
+import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
 import net.minecraftforge.oredict.OreDictionary
 import net.minecraftforge.oredict.ShapedOreRecipe
-import net.minecraftforge.oredict.ShapelessOreRecipe
 import ooen.materia.Tags
 
 @Mod(
@@ -26,41 +29,43 @@ import ooen.materia.Tags
     modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
 )
 object Fundamentum {
+    private val infestedLeaves = InfestedLeaves()
     private val crook =
         Crook()
             .setUnlocalizedName("ooen.crook")
             .setTextureName("ooen_fundamentum:crook_wood")
             .setCreativeTab(CreativeTabs.tabTools)
     private val larva =
-        Item()
+        Silkworm(infestedLeaves)
             .setUnlocalizedName("ooen.silkworm")
             .setTextureName("ooen_fundamentum:silkworm")
             .setCreativeTab(CreativeTabs.tabMaterials)
 
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
-        val leaves = InfestedLeaves()
-        val barrel = CompostBarrel()
         GameRegistry.registerItem(crook, "crook")
         GameRegistry.registerItem(larva, "silkworm")
-        GameRegistry.registerBlock(leaves, "infested_leaves")
-        GameRegistry.registerBlock(barrel, "barrel")
+        GameRegistry.registerBlock(infestedLeaves, "infested_leaves")
         GameRegistry.addRecipe(
             ShapedOreRecipe(ItemStack(crook), "SS", " S", " S", 'S', Items.stick)
         )
-        GameRegistry.addRecipe(ShapelessOreRecipe(ItemStack(leaves), larva, "treeLeaves"))
-        GameRegistry.addRecipe(
-            ShapedOreRecipe(
-                ItemStack(barrel),
-                "P P",
-                "P P",
-                "PSP",
-                'P',
-                "plankWood",
-                'S',
-                "slabWood",
+        for (wood in VanillaWood.entries) {
+            val barrel = CompostBarrel(wood)
+            GameRegistry.registerBlock(barrel, "barrel" + wood.suffix)
+            GameRegistry.addRecipe(
+                ShapedOreRecipe(
+                    ItemStack(barrel),
+                    "P P",
+                    "P P",
+                    "PSP",
+                    'P',
+                    ItemStack(Blocks.planks, 1, wood.metadata),
+                    'S',
+                    ItemStack(Blocks.wooden_slab, 1, wood.metadata),
+                )
             )
-        )
+        }
+        FMLInterModComms.sendMessage("Waila", "register", "ooen.fundamentum.WailaTooltips.register")
         MinecraftForge.EVENT_BUS.register(this)
     }
 
@@ -71,14 +76,44 @@ object Fundamentum {
         if (event.world.isRemote || player.capabilities.isCreativeMode || tool.item != crook) return
         if (event.isSilkTouching) return
 
-        val item = Item.getItemFromBlock(event.block) ?: return
-        val leaf = ItemStack(item, 1, event.block.damageDropped(event.blockMetadata))
-        if (!matchesOre(leaf, "treeLeaves")) return
-        event.drops.add(leaf)
-        // Give a new crook a reliable first larva, then one every four harvests.
-        if (tool.itemDamage % 4 == 0) event.drops.add(ItemStack(larva))
+        if (event.block == infestedLeaves) {
+            if (infestedLeaves.isMature(event.blockMetadata)) {
+                event.drops.add(ItemStack(Items.string, 2))
+                if (tool.itemDamage % 4 == 0) event.drops.add(ItemStack(larva))
+            }
+        } else {
+            val item = Item.getItemFromBlock(event.block) ?: return
+            val leaf = ItemStack(item, 1, event.block.damageDropped(event.blockMetadata))
+            if (!matchesOre(leaf, "treeLeaves")) return
+            event.drops.add(leaf)
+            // Give a new crook a reliable first larva, then one every four harvests.
+            if (tool.itemDamage % 4 == 0) event.drops.add(ItemStack(larva))
+        }
         tool.damageItem(1, player)
         if (tool.stackSize == 0) player.destroyCurrentEquippedItem()
+    }
+}
+
+private class Silkworm(private val leaves: InfestedLeaves) : Item() {
+    override fun onItemUse(
+        stack: ItemStack,
+        player: EntityPlayer,
+        world: World,
+        x: Int,
+        y: Int,
+        z: Int,
+        side: Int,
+        hitX: Float,
+        hitY: Float,
+        hitZ: Float,
+    ): Boolean {
+        if (!player.canPlayerEdit(x, y, z, side, stack) || !leaves.canInfest(world, x, y, z)) {
+            return false
+        }
+        if (world.isRemote) return true
+        if (!leaves.infest(world, x, y, z)) return false
+        if (!player.capabilities.isCreativeMode) stack.stackSize--
+        return true
     }
 }
 
