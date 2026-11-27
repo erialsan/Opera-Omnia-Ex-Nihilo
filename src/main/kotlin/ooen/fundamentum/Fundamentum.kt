@@ -29,12 +29,12 @@ object Fundamentum {
     private val crook =
         Crook()
             .setUnlocalizedName("ooen.crook")
-            .setTextureName("minecraft:wood_hoe")
+            .setTextureName("ooen_fundamentum:crook_wood")
             .setCreativeTab(CreativeTabs.tabTools)
     private val larva =
         Item()
             .setUnlocalizedName("ooen.silkworm")
-            .setTextureName("minecraft:ghast_tear")
+            .setTextureName("ooen_fundamentum:silkworm")
             .setCreativeTab(CreativeTabs.tabMaterials)
 
     @Mod.EventHandler

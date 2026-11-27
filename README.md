@@ -54,6 +54,13 @@ JarJar の動作確認には、RetroFuturaBootstrap を使う `./gradlew runClie
 
 開発クライアントの統合サーバーでは、サバイバルでのクラフト、葉の採取、成熟と堆肥化、土からの種の回収までを通して確認した。
 
+## テクスチャのクレジット
+
+木のクロークと蚕蛾の幼虫の PNG は **Ex Nihilo: Creatio** から画像を変更せずに収録した。上流のライセンスに記載されたテクスチャのクレジットは **© 2019 Wolforce**。MIT ライセンスと上流の著作権表示の全文を [ExNihiloCreatio-MIT.txt](src/main/resources/META-INF/licenses/ExNihiloCreatio-MIT.txt) として JAR に同梱する。
+
+- 木のクローク → [Creatio の `crook_wood.png`](https://github.com/BloodyMods/ExNihiloCreatio/blob/75f60692a4257a62ba9f6831866e456d8526ec9d/src/main/resources/assets/exnihilocreatio/textures/items/tools/crook/crook_wood.png)
+- 蚕蛾の幼虫 → [Creatio の `silkworm.png`](https://github.com/BloodyMods/ExNihiloCreatio/blob/75f60692a4257a62ba9f6831866e456d8526ec9d/src/main/resources/assets/exnihilocreatio/textures/items/silkworm.png)
+
 ## Materia の金属カタログ
 
 初回起動で生成される `config/ooen_materia.cfg` の `materials.metalWhitelist` で対象を指定する。JAOPCA の素材名を大文字・小文字も含めて指定し、編集後は再起動する。合金や別名で検出された素材にも個別の許可が必要。空のリストでは全素材を無効にできる。
