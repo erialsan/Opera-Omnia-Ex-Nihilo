@@ -1,12 +1,13 @@
 package ooen.client
 
+import com.gtnewhorizon.gtnhlib.client.renderer.TessellatorManager
+import com.gtnewhorizon.gtnhlib.client.renderer.cel.api.util.ColorARGB
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler
 import cpw.mods.fml.client.registry.RenderingRegistry
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import net.minecraft.block.Block
 import net.minecraft.client.renderer.RenderBlocks
-import net.minecraft.client.renderer.Tessellator
 import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
 
@@ -43,11 +44,11 @@ private constructor(
             val surface = surfaceAt(block, world, x, y, z, metadata) ?: return true
             val height = surface.height
             renderer.setRenderBounds(innerMin, height, innerMin, innerMax, height, innerMax)
-            val tessellator = Tessellator.instance
+            val tessellator = TessellatorManager.get()
             tessellator.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z))
-            val red = (surface.color shr 16 and 255) / 255f
-            val green = (surface.color shr 8 and 255) / 255f
-            val blue = (surface.color and 255) / 255f
+            val red = ColorARGB.unpackRed(surface.color) / 255f
+            val green = ColorARGB.unpackGreen(surface.color) / 255f
+            val blue = ColorARGB.unpackBlue(surface.color) / 255f
             tessellator.setColorOpaque_F(red, green, blue)
             renderer.renderFaceYPos(block, x.toDouble(), y.toDouble(), z.toDouble(), surface.icon)
             if (surface.doubleSided) {
@@ -74,7 +75,7 @@ private constructor(
         renderer: RenderBlocks,
     ) {
         val wood = block.getIcon(0, metadata)
-        val tessellator = Tessellator.instance
+        val tessellator = TessellatorManager.get()
         val origin = -0.5
         tessellator.startDrawingQuads()
         for (part in parts) {

@@ -1,14 +1,68 @@
-
-name: Release tagged build
+name: Release
 
 on:
   push:
     tags: [ '*' ]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version (e.g. 0.1.0 or 0.1.0-rc.1)
+        type: string
+        required: true
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.version || github.ref_name }}
 
 jobs:
-  release-tags:
-    uses: GTNewHorizons/GTNH-Actions-Workflows/.github/workflows/release-tags.yml@master
-    secrets: inherit
+  build:
+    uses: ./.github/workflows/build-and-test.yml
+    with:
+      release_version: ${{ inputs.version || github.ref_name }}
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v8
+        with:
+          name: release-jars
+          path: dist
+      - name: Publish GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version || github.ref_name }}
+        run: |
+          tag="refs/tags/$VERSION"
+          commit=$(git rev-parse HEAD)
+
+          if git show-ref --verify --quiet "$tag"; then
+            if [[ "$(git rev-parse "$tag^{commit}")" != "$commit" ]]; then
+              echo "::error::Tag $VERSION points to a different commit."
+              exit 1
+            fi
+          elif [[ "$GITHUB_EVENT_NAME" == workflow_dispatch ]]; then
+            git push origin "$commit:$tag"
+          else
+            echo "::error::Tag $VERSION no longer exists."
+            exit 1
+          fi
+
+          notes=(--generate-notes)
+          if [[ -f ".changelogs/$VERSION.md" ]]; then
+            notes=(--notes-file ".changelogs/$VERSION.md")
+          fi
+
+          flags=()
+          if [[ "$VERSION" == *-* ]]; then
+            flags+=(--prerelease)
+          fi
+          gh release create "$VERSION" --verify-tag "${notes[@]}" "${flags[@]}" dist/*.jar

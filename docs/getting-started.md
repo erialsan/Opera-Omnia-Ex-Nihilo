@@ -22,13 +22,23 @@ Minecraft **1.7.10**、Forge **10.13.4.1614**、MCP **stable 12** を使う。�
 
 Kotlin 移行後の実測（2026-11-26）：`build` と `runClient25` が成功。Forgelin が Kotlin 2.4.10 をロードし、Materia のロード完了時に `ingotIron entries=1` を確認した。MaterialsLib・JAOPCA は未導入。`runServer25` は初回の EULA 確認で停止したため、専用サーバーは未検証。
 
+## CI とリリース
+
+`main`・`master` への push と両ブランチを対象にしたプルリクエストで、Kotlin ファイル（`.kt`・`.kts`）内の `!!` を検査してから JDK 25 で `./gradlew build` を実行する。検査ではコメントや文字列内の `!!` も検出する。
+
+GitHub の **Actions → Release → Run workflow** で対象ブランチを選び、`version` に `0.1.0` などを入力する。同じ形式のタグを push しても実行できる。CI の通過後、ワークフローを実行したコミットに対応するタグで、JAR 付きの GitHub Release を公開する。`0.1.0-rc.1` のように接尾辞が付く版はプレリリースになる。
+
+**Update Gradle** は毎週月曜 9:23（日本時間）に既定ブランチで実行する。**Actions → Update Gradle → Run workflow** から手動でも実行できる。`updateBuildScript` と `updateDependencies` を順に実行し、差分がありビルドが通ったら、レビュー用 PR を作成または更新する。依存関係の更新対象は GTNHGradle が対応する GTNH Maven の依存に限る。
+
+更新 PR の作成には、リポジトリの **Settings → Actions → General → Workflow permissions** で **Allow GitHub Actions to create and approve pull requests** を有効にする必要がある。更新 PR の CI は、GitHub 上で実行の承認が必要になることがある。
+
 ## 必須依存
 
-配布版 Materia を使う場合は、Minecraft 1.7.10 向けの以下の MOD をクライアント・専用サーバーの両方に入れる（記載は最低バージョン）。開発時は Gradle が dev JAR を取得する。
+配布版を使う場合は、Minecraft 1.7.10 向けの以下の MOD をクライアント・専用サーバーの両方に入れる（記載は最低バージョン）。開発時は Gradle が dev JAR を取得する。
 
 - [Forgelin 2.4.3-2.4.10](https://github.com/LegacyModdingMC/Forgelin/releases/tag/2.4.3-2.4.10)：Kotlin コンパイラは提供されるランタイムと同じ 2.4.10 を使う。通常版は初回起動時に Kotlin ランタイムを取得する。
 - [FalsePatternLib 1.12.2](https://github.com/FalsePattern/FalsePatternLib/releases/tag/1.12.2)
-- [GTNHLib 0.12.10](https://github.com/GTNewHorizons/GTNHLib/releases/tag/0.12.10)：Materia のコードから API を使用できるよう、コンパイル時にも追加する。
+- [GTNHLib 0.12.11](https://www.curseforge.com/minecraft/mc-mods/gtnhlib/files/9830849)：Fundamentum、Cribrum、Materia の必須依存。手動導入時は GTNHLib が指定する GTNHExtLib と UniMixins も入れる。
 
 金属カタログを使う場合は、実行環境に [JAOPCA 1.7.10-W.0.8.32](https://www.curseforge.com/minecraft/mc-mods/jaopca/files/8859967) を追加する。JAOPCA が無い環境ではカタログは空になる。
 

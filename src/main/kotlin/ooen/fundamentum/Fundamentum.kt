@@ -20,6 +20,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
 import net.minecraftforge.oredict.OreDictionary
 import net.minecraftforge.oredict.ShapedOreRecipe
+import ooen.GTNH_LIB_DEPENDENCY
 import ooen.materia.Tags
 
 @Mod(
@@ -27,7 +28,7 @@ import ooen.materia.Tags
     name = "Opera Omnia Ex Nihilo: Fundamentum",
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
-    dependencies = "required-after:forgelin@[2.4.3-2.4.10,)",
+    dependencies = "required-after:forgelin@[2.4.3-2.4.10,);$GTNH_LIB_DEPENDENCY",
     modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
 )
 object Fundamentum {
@@ -62,7 +63,7 @@ object Fundamentum {
         )
         for (wood in VanillaWood.entries) {
             val barrel = CompostBarrel(wood).setCreativeTab(creativeTab)
-            GameRegistry.registerBlock(barrel, "barrel" + wood.suffix)
+            GameRegistry.registerBlock(barrel, "barrel${wood.suffix}")
             GameRegistry.addRecipe(
                 ShapedOreRecipe(
                     ItemStack(barrel),

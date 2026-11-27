@@ -8,6 +8,7 @@ import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraftforge.oredict.ShapedOreRecipe
+import ooen.GTNH_LIB_DEPENDENCY
 import ooen.fundamentum.Fundamentum
 import ooen.fundamentum.VanillaWood
 import ooen.materia.Tags
@@ -18,7 +19,7 @@ import ooen.netheriteIngots
     name = "Opera Omnia Ex Nihilo: Cribrum",
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
-    dependencies = "required-after:ooen_fundamentum",
+    dependencies = "required-after:ooen_fundamentum;$GTNH_LIB_DEPENDENCY",
     modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
 )
 object Cribrum {
@@ -54,7 +55,7 @@ object Cribrum {
         registerUpgrade(MeshTier.EMERALD, ItemStack(Items.emerald))
         for (wood in VanillaWood.entries) {
             val sieve = Sieve(mesh, wood).setCreativeTab(Fundamentum.creativeTab)
-            GameRegistry.registerBlock(sieve, "sieve" + wood.suffix)
+            GameRegistry.registerBlock(sieve, "sieve${wood.suffix}")
             GameRegistry.addRecipe(
                 ShapedOreRecipe(
                     ItemStack(sieve),

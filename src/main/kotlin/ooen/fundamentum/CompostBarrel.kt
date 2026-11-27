@@ -18,7 +18,7 @@ internal const val COMPOST_READY = COMPOST_CAPACITY + 1
 
 internal class CompostBarrel(private val wood: VanillaWood) : Block(Material.wood) {
     init {
-        setBlockName("ooen.barrel" + wood.suffix)
+        setBlockName("ooen.barrel${wood.suffix}")
         setHardness(1.5f)
         setStepSound(soundTypeWood)
     }

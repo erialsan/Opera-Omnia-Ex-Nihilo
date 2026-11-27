@@ -1,5 +1,7 @@
 package ooen.materia
 
+import com.gtnewhorizon.gtnhlib.util.ItemUtil
+import com.gtnewhorizon.gtnhlib.util.data.ItemId
 import cpw.mods.fml.common.Loader
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
@@ -13,7 +15,7 @@ internal enum class MetalForm(private val orePrefix: String) {
     SAND("ooenOreSand"),
     POWDER("ooenOrePowder");
 
-    fun oreKey(metal: String): String = orePrefix + metal
+    fun oreKey(metal: String): String = "$orePrefix$metal"
 }
 
 internal object MetalCatalog {
@@ -51,8 +53,8 @@ private object JaopcaMetals {
         if (!material.isAllowedMetal(allowedMetals)) return emptyList()
         return material
             .stacks(form)
-            .distinctBy { Triple(it.item, it.itemDamage, it.tagCompound) }
-            .map { it.copy().apply { stackSize = 1 } }
+            .distinctBy { ItemId.createNoCopy(it.item, it.itemDamage, it.tagCompound) }
+            .mapNotNull { ItemUtil.copyAmount(1, it) }
             .toList()
     }
 
@@ -63,6 +65,7 @@ private object JaopcaMetals {
         (sequenceOf(name) + alternativeNames.asSequence()).flatMap { metal ->
             OreDictionary.getOres(form.oreKey(metal), false)
                 .asSequence()
+                .filterNot(ItemUtil::isStackInvalid)
                 // Wildcards match inputs but do not identify concrete output stacks.
                 .filter { it.itemDamage != OreDictionary.WILDCARD_VALUE }
                 // Forge registers both vanilla brick items under ingot keys.

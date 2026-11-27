@@ -25,7 +25,7 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
     private lateinit var meshIcons: List<IIcon>
 
     init {
-        setBlockName("ooen.sieve" + wood.suffix)
+        setBlockName("ooen.sieve${wood.suffix}")
         setHardness(1.5f)
         setStepSound(soundTypeWood)
         setBlockBounds(0f, 0f, 0f, 1f, 0.75f, 1f)
