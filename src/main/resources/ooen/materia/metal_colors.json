@@ -19,5 +19,6 @@
   { "metal": "Manganese", "rgb": "c0a9b6" },
   { "metal": "Titanium", "rgb": "dbb7df" },
   { "metal": "Mithril", "rgb": "80d5de" },
-  { "metal": "Thorium", "rgb": "87a18b" }
+  { "metal": "Thorium", "rgb": "87a18b" },
+  { "metal": "Netherite", "rgb": "88798b" }
 ]

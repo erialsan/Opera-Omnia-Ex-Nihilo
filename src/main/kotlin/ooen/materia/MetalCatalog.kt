@@ -5,7 +5,8 @@ import com.gtnewhorizon.gtnhlib.util.data.ItemId
 import cpw.mods.fml.common.Loader
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
-import net.minecraftforge.oredict.OreDictionary
+import ooen.concreteOreStacks
+import ooen.netheriteIngots
 import thelm.jaopca.api.JAOPCAApi
 import thelm.jaopca.api.materials.IMaterial
 
@@ -29,26 +30,31 @@ internal object MetalCatalog {
     }
 
     @JvmStatic
-    fun names(): List<String> =
-        if (Loader.isModLoaded("jaopca")) {
-            JaopcaMetals.names(allowedMetals)
-        } else {
-            allowedMetals.filter { ingots(it).any() }.sorted()
-        }
+    fun names(): List<String> {
+        if (!Loader.isModLoaded("jaopca")) return allowedMetals.filter { ingots(it).any() }.sorted()
+        val names = JaopcaMetals.names(allowedMetals)
+        if ("Netherite" !in allowedMetals || netheriteIngots().isEmpty()) return names
+        return (names + "Netherite").distinct().sorted()
+    }
 
     @JvmStatic
-    fun candidates(metal: String, form: MetalForm): List<ItemStack> =
+    fun candidates(metal: String, form: MetalForm): List<ItemStack> {
         if (Loader.isModLoaded("jaopca")) {
-            JaopcaMetals.candidates(metal, form, allowedMetals)
-        } else if (metal in allowedMetals && ingots(metal).any()) {
-            stacks(sequenceOf(metal), form).copies()
-        } else emptyList()
+            val candidates = JaopcaMetals.candidates(metal, form, allowedMetals)
+            if (candidates.isNotEmpty() || metal != "Netherite") return candidates
+        }
+        if (metal !in allowedMetals) return emptyList()
+        val ingots = ingots(metal)
+        if (form == MetalForm.INGOT) return ingots.copies()
+        return if (ingots.any()) stacks(sequenceOf(metal), form).copies() else emptyList()
+    }
 
     fun color(metal: String): Int? =
         if (Loader.isModLoaded("jaopca")) JaopcaMetals.color(metal) else null
 
     private fun ingots(metal: String): Sequence<ItemStack> =
-        stacks(sequenceOf(metal), MetalForm.INGOT)
+        if (metal == "Netherite") netheriteIngots().asSequence()
+        else stacks(sequenceOf(metal), MetalForm.INGOT)
 }
 
 // Keep references to the optional API out of MetalCatalog's class.
@@ -81,11 +87,7 @@ private object JaopcaMetals {
 
 private fun stacks(metals: Sequence<String>, form: MetalForm): Sequence<ItemStack> =
     metals.flatMap { metal ->
-        OreDictionary.getOres(form.oreKey(metal), false)
-            .asSequence()
-            .filterNot(ItemUtil::isStackInvalid)
-            // Wildcards match inputs but do not identify concrete output stacks.
-            .filter { it.itemDamage != OreDictionary.WILDCARD_VALUE }
+        concreteOreStacks(form.oreKey(metal))
             // Forge registers both vanilla brick items under ingot keys.
             .filter {
                 form != MetalForm.INGOT || (it.item != Items.brick && it.item != Items.netherbrick)
