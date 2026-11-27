@@ -7,11 +7,11 @@ import cpw.mods.fml.common.registry.GameRegistry
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
-import net.minecraftforge.oredict.OreDictionary
 import net.minecraftforge.oredict.ShapedOreRecipe
 import ooen.fundamentum.Fundamentum
 import ooen.fundamentum.VanillaWood
 import ooen.materia.Tags
+import ooen.netheriteIngots
 
 @Mod(
     modid = "ooen_cribrum",
@@ -72,11 +72,7 @@ object Cribrum {
 
     @Mod.EventHandler
     fun registerNetherite(event: FMLLoadCompleteEvent) {
-        val ingots =
-            listOf("ingotNetherite", "NetheriteIngot")
-                .flatMap { OreDictionary.getOres(it, false) }
-                .filter { it.item != null && it.itemDamage != OreDictionary.WILDCARD_VALUE }
-                .distinctBy { it.item to it.itemDamage }
+        val ingots = netheriteIngots()
         netheriteAvailable = ingots.isNotEmpty()
         for (ingot in ingots) registerUpgrade(MeshTier.NETHERITE, ingot)
     }

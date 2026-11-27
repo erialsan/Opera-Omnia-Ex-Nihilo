@@ -29,5 +29,11 @@
 		"description": "Manual sieves and meshes.",
 		"version": "${modVersion}",
 		"mcversion": "${minecraftVersion}"
+	}, {
+		"modid": "ooen_malleus",
+		"name": "Opera Omnia Ex Nihilo: Malleus",
+		"description": "Hand hammers for resource processing.",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}"
 	}]
 }

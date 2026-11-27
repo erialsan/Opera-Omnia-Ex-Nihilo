@@ -27,6 +27,10 @@ description: サバイバルで葉を採取し、糸と土を作り、篩で小�
 
 開発クライアントの統合サーバーでは、サバイバルでのクラフト、葉の採取、成熟と堆肥化、土からの種の回収までを通して確認した。
 
+## Malleus のハンマー
+
+作業台で、上段中央と中段右に素材、中段中央と下段左に棒を置く。素材は板材、丸石、鉄インゴット、ダイヤモンド、エメラルドのいずれか。ネザライトインゴットが OreDictionary に登録されている環境では、ネザライトのハンマーがクリエイティブタブに出る。ネザライトの鍛冶レシピとハンマーによる粉砕は後の実装。
+
 起動手順は [開発環境と起動](getting-started.md) を参照。
 
 シルクワームの使い方と葉への広がり方は [Ex Nihilo Wiki の Silkworm](https://ftb.fandom.com/wiki/Silkworm) と [作者の解説](https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/1291850-ex-nihilo-the-skyblock-companion-mod) を参照。
