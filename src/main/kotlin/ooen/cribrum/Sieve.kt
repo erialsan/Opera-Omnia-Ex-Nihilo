@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.SideOnly
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
-import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
@@ -26,7 +25,6 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
 
     init {
         setBlockName("ooen.sieve" + wood.suffix)
-        setCreativeTab(CreativeTabs.tabBlock)
         setHardness(1.5f)
         setStepSound(soundTypeWood)
         setBlockBounds(0f, 0f, 0f, 1f, 0.75f, 1f)

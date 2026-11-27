@@ -5,6 +5,8 @@ import cpw.mods.fml.common.event.FMLInterModComms
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.registry.GameRegistry
+import cpw.mods.fml.relauncher.Side
+import cpw.mods.fml.relauncher.SideOnly
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.creativetab.CreativeTabs
@@ -29,28 +31,33 @@ import ooen.materia.Tags
     modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
 )
 object Fundamentum {
+    internal val creativeTab: CreativeTabs =
+        object : CreativeTabs("ooen") {
+            @SideOnly(Side.CLIENT) override fun getTabIconItem(): Item = crook
+        }
+
     private val infestedLeaves = InfestedLeaves()
     private val crook =
         Crook()
             .setUnlocalizedName("ooen.crook")
             .setTextureName("ooen_fundamentum:crook_wood")
-            .setCreativeTab(CreativeTabs.tabTools)
+            .setCreativeTab(creativeTab)
     private val larva =
         Silkworm(infestedLeaves)
             .setUnlocalizedName("ooen.silkworm")
             .setTextureName("ooen_fundamentum:silkworm")
-            .setCreativeTab(CreativeTabs.tabMaterials)
+            .setCreativeTab(creativeTab)
 
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
         GameRegistry.registerItem(crook, "crook")
         GameRegistry.registerItem(larva, "silkworm")
-        GameRegistry.registerBlock(infestedLeaves, "infested_leaves")
+        GameRegistry.registerBlock(infestedLeaves.setCreativeTab(creativeTab), "infested_leaves")
         GameRegistry.addRecipe(
             ShapedOreRecipe(ItemStack(crook), "SS", " S", " S", 'S', Items.stick)
         )
         for (wood in VanillaWood.entries) {
-            val barrel = CompostBarrel(wood)
+            val barrel = CompostBarrel(wood).setCreativeTab(creativeTab)
             GameRegistry.registerBlock(barrel, "barrel" + wood.suffix)
             GameRegistry.addRecipe(
                 ShapedOreRecipe(

@@ -6,7 +6,6 @@ import java.util.Random
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
-import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
@@ -20,7 +19,6 @@ private const val READY = CAPACITY + 1
 internal class CompostBarrel(private val wood: VanillaWood) : Block(Material.wood) {
     init {
         setBlockName("ooen.barrel" + wood.suffix)
-        setCreativeTab(CreativeTabs.tabBlock)
         setHardness(1.5f)
         setStepSound(soundTypeWood)
     }

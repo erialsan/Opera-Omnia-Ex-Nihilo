@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.SideOnly
 import java.util.Random
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
-import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.ItemStack
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
@@ -21,7 +20,6 @@ internal class InfestedLeaves : Block(Material.leaves) {
     init {
         setBlockName("ooen.infested_leaves")
         setBlockTextureName("minecraft:leaves_oak")
-        setCreativeTab(CreativeTabs.tabBlock)
         setHardness(0.2f)
         setStepSound(soundTypeGrass)
     }
