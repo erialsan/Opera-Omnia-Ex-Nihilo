@@ -16,7 +16,7 @@ import net.minecraft.world.World
 import ooen.fundamentum.VanillaWood
 
 private const val FRAME = 0
-private const val MESH = 1
+internal const val MESH = 1
 private const val LOADED = 2
 private const val LAST_PASS = 4
 
@@ -31,6 +31,10 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
     }
 
     override fun isOpaqueCube(): Boolean = false
+
+    override fun renderAsNormalBlock(): Boolean = false
+
+    override fun getRenderType(): Int = Cribrum.sieveRenderType
 
     override fun canSilkHarvest(): Boolean = false
 
@@ -47,6 +51,21 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
     ): Boolean {
         val stage = world.getBlockMetadata(x, y, z)
         val held = player.currentEquippedItem
+        if (stage in MESH..LAST_PASS && player.isSneaking && held == null) {
+            if (!world.isRemote && world.setBlockMetadataWithNotify(x, y, z, FRAME, 3)) {
+                val recovered = ItemStack(mesh)
+                if (!player.inventory.addItemStackToInventory(recovered)) {
+                    dropBlockAsItem(world, x, y, z, recovered)
+                }
+                if (stage >= LOADED) {
+                    val dirt = ItemStack(Blocks.dirt)
+                    if (!player.inventory.addItemStackToInventory(dirt)) {
+                        dropBlockAsItem(world, x, y, z, dirt)
+                    }
+                }
+            }
+            return true
+        }
         val next =
             when (stage) {
                 FRAME -> if (held?.item == mesh) MESH else return false
@@ -96,9 +115,13 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
 
     @SideOnly(Side.CLIENT)
     override fun getIcon(side: Int, metadata: Int): IIcon =
+        Blocks.planks.getIcon(side, wood.metadata)
+
+    @SideOnly(Side.CLIENT)
+    fun surfaceIcon(metadata: Int): IIcon? =
         when {
-            side != 1 || metadata == FRAME -> Blocks.planks.getIcon(side, wood.metadata)
+            metadata == FRAME -> null
             metadata == MESH -> meshIcon
-            else -> Blocks.dirt.getIcon(side, 0)
+            else -> Blocks.dirt.getIcon(1, 0)
         }
 }

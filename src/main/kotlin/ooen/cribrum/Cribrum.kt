@@ -20,8 +20,12 @@ import ooen.materia.Tags
     modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
 )
 object Cribrum {
+    internal var sieveRenderType: Int = 0
+        private set
+
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
+        if (event.side.isClient) sieveRenderType = SieveRenderer.register()
         val mesh =
             StringMesh()
                 .setUnlocalizedName("ooen.string_mesh")
