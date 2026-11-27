@@ -30,8 +30,14 @@ providers.gradleProperty("ooenProbe").orNull?.let { profile ->
       when (profile) {
         "materialslib",
         "jaopca" -> listOf(profile)
+        "jaopca-baseline" -> listOf("jaopca")
         "both" -> listOf("materialslib", "jaopca")
-        else -> error("Unknown ooenProbe '$profile': use materialslib, jaopca or both")
+        else -> error("Unknown ooenProbe '$profile': use materialslib, jaopca, jaopca-baseline or both")
       }
   probes.forEach { apply(from = "probes/$it/probe.gradle") }
+  val metal = providers.gradleProperty("ooenProbeMetal").getOrElse("iron")
+  require(metal == "iron" || metal == "copper") { "ooenProbeMetal: use iron or copper" }
+  tasks.withType<JavaExec>()
+      .matching { it.name.startsWith("runClient") || it.name.startsWith("runServer") }
+      .configureEach { systemProperty("ooen.probe.metal", metal) }
 }

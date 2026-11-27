@@ -34,14 +34,17 @@ public final class IronConsumer {
     @Mod.EventHandler
     public void verify(FMLLoadCompleteEvent event) {
         IMaterialRegistryManager manager = MaterialsAPI.materialManager;
-        IMaterialRegistry owner = manager.getRegistry("ooen_iron_provider");
-        Material iron = owner.getMaterial(26);
+        IMaterialRegistry owner = manager.getRegistry(IronProvider.ID);
+        String name = IronProvider.MATERIAL_NAME;
+        int id = IronProvider.MATERIAL_ID;
+        Material material = owner.getMaterial(id);
         if (manager.getPhase() != IMaterialRegistryManager.Phase.FROZEN
-            || !"ooen_iron_provider".equals(owner.getModId()) || iron == null || iron != owner.getMaterial("iron")
-            || !"ooen_iron_provider".equals(iron.getModId()) || !"iron".equals(iron.getName()) || iron.getId() != 26) {
-            throw new IllegalStateException("Consumer failed to look up ooen_iron_provider:iron (26) in FROZEN registry");
+            || !IronProvider.ID.equals(owner.getModId()) || material == null || material != owner.getMaterial(name)
+            || !IronProvider.ID.equals(material.getModId()) || !name.equals(material.getName()) || material.getId() != id) {
+            throw new IllegalStateException("Consumer failed to look up " + IronProvider.ID + ":" + name + " (" + id + ") in FROZEN registry");
         }
-        LogManager.getLogger(ID).info("MATERIALSLIB_IRON_PASS registry={} name={} id={} phase={}", owner.getModId(), iron.getName(), iron.getId(), manager.getPhase());
+        String marker = IronProvider.COPPER ? "MATERIALSLIB_COPPER_PASS" : "MATERIALSLIB_IRON_PASS";
+        LogManager.getLogger(ID).info("{} registry={} name={} id={} phase={}", marker, owner.getModId(), name, id, manager.getPhase());
         IMaterialRegistry bySecondName = manager.getRegistry(ID);
         LogManager.getLogger(ID).info("MATERIALSLIB_NAMESPACE_CONTROL isolated={} requested={} returned={}", bySecondName == secondRegistry, ID, bySecondName.getModId());
     }

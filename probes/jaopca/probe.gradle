@@ -1,9 +1,15 @@
-// Applied only with -PooenProbe=jaopca or both. No fixture classes or deps in the published mod.
+// No fixture classes or runtime dependencies are included in the published mod.
 def dist = file('build/probe-jaopca/JAOPCA-1.7.10-W.0.8.32.jar')
 def sha = '0461f752fa25bb7b1a00d1cee984f0edd0e846408b8d6c579e6c4c62f598bacd'
 if (!dist.isFile() || java.security.MessageDigest.getInstance('SHA-256').digest(dist.bytes).encodeHex().toString() != sha) {
     throw new GradleException("Missing or wrong JAOPCA artifact. Fetch file 8859967 to ${dist} (SHA-256 ${sha}).")
 }
+dependencies {
+    runtimeOnlyNonPublishable(rfg.deobf(project.files(dist)))
+    runtimeOnlyNonPublishable('io.github.legacymoddingmc:unimixins:0.3.1:dev') { transitive = false }
+}
+if (providers.gradleProperty('ooenProbe').get() == 'jaopca-baseline') return
+
 def scenario = providers.gradleProperty('jaopcaCase').getOrElse('reuse')
 if (!(scenario in ['generate', 'reuse', 'exclude'])) throw new GradleException('jaopcaCase: generate, reuse, or exclude')
 
@@ -25,8 +31,6 @@ def fixture = tasks.register('jaopcaProbeJar', Jar) {
     }
 }
 dependencies {
-    runtimeOnlyNonPublishable(rfg.deobf(project.files(dist)))
-    runtimeOnlyNonPublishable('io.github.legacymoddingmc:unimixins:0.3.1:dev') { transitive = false }
     runtimeOnlyNonPublishable(project.files(fixture))
 }
 tasks.withType(JavaExec).matching { it.name.startsWith('runClient') || it.name.startsWith('runServer') }.configureEach {
