@@ -31,6 +31,9 @@ import ooen.materia.Tags
     modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
 )
 object Fundamentum {
+    internal var barrelRenderType: Int = 0
+        private set
+
     internal val creativeTab: CreativeTabs =
         object : CreativeTabs("ooen") {
             @SideOnly(Side.CLIENT) override fun getTabIconItem(): Item = crook
@@ -50,6 +53,7 @@ object Fundamentum {
 
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
+        if (event.side.isClient) barrelRenderType = BarrelRenderer.register()
         GameRegistry.registerItem(crook, "crook")
         GameRegistry.registerItem(larva, "silkworm")
         GameRegistry.registerBlock(infestedLeaves.setCreativeTab(creativeTab), "infested_leaves")
