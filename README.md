@@ -1,8 +1,8 @@
 ---
 type: Development Guide
-title: Materia 開発環境と依存検証
+title: OOEN 開発環境と初期進行
 ---
-# Opera Omnia Ex Nihilo: Materia
+# Opera Omnia Ex Nihilo
 
 [開発計画](development-plan.md)では、既存の素材から鉱石砂利・鉱石砂・鉱石粉を重複なく用意できるかを検証する。Materia は JAOPCA が認識した金属と、環境に登録済みの加工形態を参照する。
 
@@ -41,11 +41,24 @@ EndlessIDs 1.7.1 と ChunkAPI 0.8.1 も開発環境の実行時だけに追加�
 
 JarJar の動作確認には、RetroFuturaBootstrap を使う `./gradlew runClient25` または `./gradlew runServer25` を使用する。
 
+## 木から最初の篩まで
+
+同梱の `ooen_fundamentum` と `ooen_cribrum` で、木材と葉から小麦の種まで進める。通常のサバイバルワールドか、木がある SkyBlock ワールドで試せる。
+
+1. 棒4本で木のクロークを作る。左上2マスと、その右側の列を下まで埋める。クロークで葉を壊すと葉ブロックを回収できる。新しいクロークでは最初の葉から幼虫が出て、その後は葉を4枚壊すごとに1匹出る。
+2. 葉1枚と幼虫1匹を作業台で組み合わせ、虫食いの葉を作る。2ブロック置いて約5秒待ってから壊すと糸を計4本得られる。作業台の中央に棒を置き、上下左右を糸で囲ってメッシュを作る。
+3. 板材6枚と木のハーフブロック1枚で堆肥バレルを作る。作業台の左右の列に板材を置き、下段中央にハーフブロックを置く。葉を持って右クリックを8回行い、約10秒後に素手で右クリックして土を回収する。
+4. 篩の枠は作業台の上段左右と中段に板材、下段左右に棒を置いて作る。枠を置き、メッシュ、土の順に右クリックで取り付ける。さらに3回右クリックすると小麦の種が1個落ちる。
+
+この試作で篩に入るのは通常の土。古代の残骸は、導入 MOD が実物を登録する環境向けの篩ドロップ候補として扱う。
+
+開発クライアントの統合サーバーでは、サバイバルでのクラフト、葉の採取、成熟と堆肥化、土からの種の回収までを通して確認した。
+
 ## Materia の金属カタログ
 
 初回起動で生成される `config/ooen_materia.cfg` の `materials.metalWhitelist` で対象を指定する。JAOPCA の素材名を大文字・小文字も含めて指定し、編集後は再起動する。合金や別名で検出された素材にも個別の許可が必要。空のリストでは全素材を無効にできる。
 
-初期値は `Iron`、`Gold`、`Copper`、`Tin`、`Aluminum`、`Aluminium`、`Lead`、`Nickel`、`Silver`、`Cobalt`、`Ardite`、`Osmium`、`Iridium`、`Tungsten`、`Boron`、`Uranium`。
+初期値は `Iron`、`Gold`、`Copper`、`Tin`、`Aluminum`、`Aluminium`、`Lead`、`Nickel`、`Silver`、`Cobalt`、`Ardite`、`Osmium`、`Iridium`、`Tungsten`、`Boron`、`Uranium`、`Platinum`、`Manganese`、`Titanium`、`Mithril`、`Thorium`。既存の設定ファイルを使う場合は、必要な素材名を手動で追記する。
 
 ロード完了後の `MetalCatalog.names()` は、ホワイトリストにあり、JAOPCA がインゴット系として認識し、OreDictionary に具体的なインゴットが登録された素材の名前を返す。Forge がインゴット扱いするバニラのレンガは対象外。`MetalCatalog.candidates("Iron", MetalForm.GRAVEL)` のように素材名と形態を指定すると、`ingot`、`ooenOreGravel`、`ooenOreSand`、`ooenOrePowder` の各接頭辞で登録済みアイテムを照合する。許可されていても環境に銅が無ければ、候補は空になる。Materia の照合は読み取り専用。
 

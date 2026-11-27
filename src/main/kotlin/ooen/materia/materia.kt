@@ -43,6 +43,11 @@ object Materia {
                     "Tungsten",
                     "Boron",
                     "Uranium",
+                    "Platinum",
+                    "Manganese",
+                    "Titanium",
+                    "Mithril",
+                    "Thorium",
                 ),
                 "JAOPCA material names allowed in Materia. Names are case-sensitive.",
             )

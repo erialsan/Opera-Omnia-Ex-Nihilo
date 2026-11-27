@@ -1,0 +1,6 @@
+item.ooen.crook.name=Wooden Crook
+item.ooen.silkworm.name=Silkworm
+tile.ooen.infested_leaves.name=Silkworm Leaves
+tile.ooen.barrel.name=Compost Barrel
+ooen.barrel.fill=Compost barrel: %s/%s leaves.
+ooen.barrel.working=The leaves are composting.

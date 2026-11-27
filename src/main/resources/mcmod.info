@@ -17,5 +17,17 @@
 		"dependencies": [],
 		"dependants": [],
 		"useDependencyInformation": false
+	}, {
+		"modid": "ooen_fundamentum",
+		"name": "Opera Omnia Ex Nihilo: Fundamentum",
+		"description": "Early SkyBlock tools and composting.",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}"
+	}, {
+		"modid": "ooen_cribrum",
+		"name": "Opera Omnia Ex Nihilo: Cribrum",
+		"description": "Manual sieves and meshes.",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}"
 	}]
 }

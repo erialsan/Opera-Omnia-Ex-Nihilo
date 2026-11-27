@@ -1,0 +1,6 @@
+item.ooen.crook.name=木のクローク
+item.ooen.silkworm.name=蚕蛾の幼虫
+tile.ooen.infested_leaves.name=虫食いの葉
+tile.ooen.barrel.name=堆肥バレル
+ooen.barrel.fill=堆肥バレル：葉 %s/%s
+ooen.barrel.working=葉を堆肥にしています。

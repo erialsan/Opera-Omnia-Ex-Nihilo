@@ -1,0 +1,3 @@
+item.ooen.string_mesh.name=糸のメッシュ
+tile.ooen.sieve.name=木の篩
+ooen.sieve.progress=土を篩っています：%s/%s
