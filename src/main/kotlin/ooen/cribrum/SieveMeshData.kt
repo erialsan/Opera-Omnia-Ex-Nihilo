@@ -11,9 +11,12 @@ internal class SieveMeshData : TileEntity() {
     var tier: MeshTier = MeshTier.STRING
         private set
 
-    fun install(tier: MeshTier) {
-        if (this.tier == tier) return
+    var input: Block? = null
+        private set
+
+    fun updateContents(tier: MeshTier = this.tier, input: Block? = this.input) {
         this.tier = tier
+        this.input = input
         markDirty()
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
     }
@@ -21,11 +24,20 @@ internal class SieveMeshData : TileEntity() {
     override fun writeToNBT(tag: NBTTagCompound) {
         super.writeToNBT(tag)
         tag.setInteger("MeshTier", tier.ordinal)
+        tag.setString(
+            "SieveInput",
+            input?.let { Block.blockRegistry.getNameForObject(it) }.orEmpty(),
+        )
     }
 
     override fun readFromNBT(tag: NBTTagCompound) {
         super.readFromNBT(tag)
         tier = MeshTier.entries.getOrNull(tag.getInteger("MeshTier")) ?: MeshTier.STRING
+        val inputId = tag.getString("SieveInput")
+        input =
+            if (Block.blockRegistry.containsKey(inputId))
+                Block.blockRegistry.getObject(inputId) as? Block
+            else null
     }
 
     override fun getDescriptionPacket(): S35PacketUpdateTileEntity {

@@ -1,0 +1,11 @@
+[
+  { "input": "minecraft:dirt", "minimumTier": "STRING", "output": "minecraft:wheat_seeds", "percent": 100 },
+  { "input": "minecraft:gravel", "minimumTier": "STRING", "output": "minecraft:flint", "percent": 100 },
+  { "input": "minecraft:gravel", "minimumTier": "FLINT", "output": "minecraft:iron_ore", "percent": 20 },
+  { "input": "minecraft:gravel", "minimumTier": "IRON", "output": "minecraft:gold_ore", "percent": 12 },
+  { "input": "minecraft:sand", "minimumTier": "IRON", "output": "minecraft:redstone", "percent": 20 },
+  { "input": "minecraft:gravel", "minimumTier": "GOLD", "output": "minecraft:diamond", "percent": 8 },
+  { "input": "minecraft:gravel", "minimumTier": "DIAMOND", "output": "minecraft:emerald", "percent": 5 },
+  { "input": "minecraft:sand", "minimumTier": "EMERALD", "output": "minecraft:glowstone_dust", "percent": 15 },
+  { "input": "minecraft:sand", "minimumTier": "NETHERITE", "output": "minecraft:quartz", "percent": 20 }
+]

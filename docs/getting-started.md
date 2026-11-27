@@ -42,6 +42,8 @@ GitHub の **Actions → Release → Run workflow** で対象ブランチを選�
 
 金属カタログを使う場合は、実行環境に [JAOPCA 1.7.10-W.0.8.32](https://www.curseforge.com/minecraft/mc-mods/jaopca/files/8859967) を追加する。JAOPCA が無い環境ではカタログは空になる。
 
+Materia のホワイトリストの初期値は [同梱 JSON](../src/main/resources/ooen/materia/metal_whitelist.json) にある。既存の `config/ooen_materia.cfg` にホワイトリストがあれば、その値を使う。
+
 ## 開発用の依存関係
 
 開発環境では GTNH Maven の Waila 1.19.34 を使う。配布環境では任意で導入でき、虫食いの進行度と堆肥バレルの状態を照準先の表示で確認できる。[Waila の配布元](https://github.com/GTNewHorizons/waila)

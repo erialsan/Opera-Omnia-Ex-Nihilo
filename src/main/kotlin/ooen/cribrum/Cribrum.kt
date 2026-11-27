@@ -72,7 +72,8 @@ object Cribrum {
     }
 
     @Mod.EventHandler
-    fun registerNetherite(event: FMLLoadCompleteEvent) {
+    fun onLoadComplete(event: FMLLoadCompleteEvent) {
+        SieveRecipes.load()
         val ingots = netheriteIngots()
         netheriteAvailable = ingots.isNotEmpty()
         for (ingot in ingots) registerUpgrade(MeshTier.NETHERITE, ingot)

@@ -1,9 +1,10 @@
 package ooen.materia
 
-import com.gtnewhorizon.gtnhlib.config.ConfigurationManager
 import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
+import net.minecraftforge.common.config.Configuration
+import ooen.BundledJson
 import ooen.GTNH_LIB_DEPENDENCY
 import org.apache.logging.log4j.LogManager
 
@@ -22,8 +23,20 @@ private const val MOD_ID = "ooen_materia"
 object Materia {
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
-        ConfigurationManager.registerConfig(MateriaConfig::class.java)
-        MetalCatalog.configure(MateriaConfig.metalWhitelist)
+        val defaults =
+            BundledJson.readArray("/ooen/materia/metal_whitelist.json")
+                .map { it.asString }
+                .toTypedArray()
+        val config = Configuration(event.suggestedConfigurationFile)
+        MetalCatalog.configure(
+            config.getStringList(
+                "metalWhitelist",
+                "materials",
+                defaults,
+                "JAOPCA material names allowed in Materia. Names are case-sensitive.",
+            )
+        )
+        if (config.hasChanged()) config.save()
     }
 
     @Mod.EventHandler

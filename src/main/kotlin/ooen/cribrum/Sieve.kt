@@ -7,7 +7,6 @@ import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
-import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ChatComponentTranslation
@@ -82,10 +81,10 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
             !world.isRemote && world.setBlockMetadataWithNotify(x, y, z, next, 3)
 
         if (stage in MESH..LAST_PASS && player.isSneaking && held == null) {
-            val tier = installedTier(world, x, y, z)
+            val contents = contents(stage, meshData(world, x, y, z))
             if (changeStage(FRAME)) {
-                meshData(world, x, y, z)?.install(MeshTier.STRING)
-                for (stack in contents(stage, tier)) {
+                meshData(world, x, y, z)?.updateContents(MeshTier.STRING, null)
+                for (stack in contents) {
                     if (!player.inventory.addItemStackToInventory(stack)) {
                         dropBlockAsItem(world, x, y, z, stack)
                     }
@@ -100,19 +99,18 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
                 if (!tier.isAvailable()) return false
                 val data = meshData(world, x, y, z) ?: return false
                 if (changeStage(MESH)) {
-                    data.install(tier)
+                    data.updateContents(tier, null)
                     if (!player.capabilities.isCreativeMode) held.stackSize--
                 }
             }
             MESH -> {
-                if (
-                    held == null ||
-                        held.item != Item.getItemFromBlock(Blocks.dirt) ||
-                        held.itemDamage != 0
-                ) {
-                    return false
+                if (held == null) return false
+                val data = meshData(world, x, y, z) ?: return false
+                val input = SieveRecipes.inputFor(held, data.tier) ?: return false
+                if (changeStage(LOADED)) {
+                    data.updateContents(input = input)
+                    if (!player.capabilities.isCreativeMode) held.stackSize--
                 }
-                if (changeStage(LOADED) && !player.capabilities.isCreativeMode) held.stackSize--
             }
             in LOADED until LAST_PASS -> {
                 val next = stage + 1
@@ -127,7 +125,15 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
                 }
             }
             LAST_PASS -> {
-                if (changeStage(MESH)) dropBlockAsItem(world, x, y, z, ItemStack(Items.wheat_seeds))
+                val data = meshData(world, x, y, z)
+                val input = loadedInput(data)
+                val tier = data?.tier ?: MeshTier.STRING
+                if (changeStage(MESH)) {
+                    data?.updateContents(input = null)
+                    for (stack in SieveRecipes.roll(input, tier, world.rand)) {
+                        dropBlockAsItem(world, x, y, z, stack)
+                    }
+                }
             }
             else -> return false
         }
@@ -143,12 +149,13 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
         fortune: Int,
     ): ArrayList<ItemStack> =
         arrayListOf(ItemStack(this)).apply {
-            if (metadata >= MESH) addAll(contents(metadata, installedTier(world, x, y, z)))
+            if (metadata >= MESH) addAll(contents(metadata, meshData(world, x, y, z)))
         }
 
-    private fun contents(stage: Int, tier: MeshTier): List<ItemStack> = buildList {
+    private fun contents(stage: Int, data: SieveMeshData?): List<ItemStack> = buildList {
+        val tier = data?.tier ?: MeshTier.STRING
         add(ItemStack(mesh, 1, tier.ordinal))
-        if (stage >= LOADED) add(ItemStack(Blocks.dirt))
+        if (stage >= LOADED) add(ItemStack(loadedInput(data)))
     }
 
     @SideOnly(Side.CLIENT)
@@ -163,10 +170,14 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
 
     @SideOnly(Side.CLIENT)
     fun installedMeshIcon(world: IBlockAccess, x: Int, y: Int, z: Int): IIcon =
-        meshIcons[installedTier(world, x, y, z).ordinal]
+        meshIcons[(meshData(world, x, y, z)?.tier ?: MeshTier.STRING).ordinal]
 
-    private fun installedTier(world: IBlockAccess, x: Int, y: Int, z: Int): MeshTier =
-        meshData(world, x, y, z)?.tier ?: MeshTier.STRING
+    @SideOnly(Side.CLIENT)
+    fun loadedInputIcon(world: IBlockAccess, x: Int, y: Int, z: Int): IIcon =
+        loadedInput(meshData(world, x, y, z)).getIcon(1, 0)
+
+    // Older saves only recorded the mesh tier. Every loaded sieve then held dirt.
+    private fun loadedInput(data: SieveMeshData?): Block = data?.input ?: Blocks.dirt
 
     private fun meshData(world: IBlockAccess, x: Int, y: Int, z: Int): SieveMeshData? =
         world.getTileEntity(x, y, z) as? SieveMeshData

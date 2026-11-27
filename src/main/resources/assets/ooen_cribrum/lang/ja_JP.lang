@@ -11,4 +11,4 @@ tile.ooen.sieve_birch.name=シラカバの篩
 tile.ooen.sieve_jungle.name=ジャングルの木の篩
 tile.ooen.sieve_acacia.name=アカシアの篩
 tile.ooen.sieve_dark_oak.name=ダークオークの篩
-ooen.sieve.progress=土を篩っています：%s/%s
+ooen.sieve.progress=篩っています：%s/%s

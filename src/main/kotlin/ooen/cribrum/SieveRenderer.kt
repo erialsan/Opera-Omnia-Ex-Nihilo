@@ -2,7 +2,6 @@ package ooen.cribrum
 
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
-import net.minecraft.init.Blocks
 import ooen.client.OpenBlockRenderer
 import ooen.client.OpenBlockRenderer.Part
 import ooen.client.OpenBlockRenderer.Surface
@@ -19,7 +18,12 @@ internal object SieveRenderer {
                         MESH_HEIGHT,
                         doubleSided = true,
                     )
-                else -> Surface(Blocks.dirt.getIcon(1, 0), DIRT_HEIGHT, doubleSided = true)
+                else ->
+                    Surface(
+                        (block as Sieve).loadedInputIcon(world, x, y, z),
+                        INPUT_HEIGHT,
+                        doubleSided = true,
+                    )
             }
         }
 
@@ -30,7 +34,7 @@ internal object SieveRenderer {
     private const val RIM_BASE = 9.0 / 16
     private const val RIM_TOP = 12.0 / 16
     private const val MESH_HEIGHT = 10.0 / 16
-    private const val DIRT_HEIGHT = 11.0 / 16
+    private const val INPUT_HEIGHT = 11.0 / 16
 
     private val frame =
         listOf(
