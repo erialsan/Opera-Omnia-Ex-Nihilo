@@ -1,4 +1,9 @@
-# MaterialsLib：鉄の登録と取得
+---
+type: Verification Guide
+title: MaterialsLib の鉄登録と取得
+description: 検証用 JAR の準備、鉄の登録・取得と名前空間の対照試験。
+---
+# MaterialsLib の鉄登録と取得
 
 1. 基準構成を `VERSION=0.0.0-dev ./gradlew build` でビルドし、終了を待つ。Gradle の既定キャッシュを使った場合は、ルートで `GRADLE_USER_HOME="$HOME/.gradle" bash probes/materialslib/prepare.sh` を実行する。キャッシュを変更している場合は基準ビルドと同じパスを指定する。初回は HTTPS 接続が必要。スクリプトは Gradle を起動せず、`build/probe-materialslib/` にだけ書く。`JAVA17_HOME` で Jabel 用 JDK 17 を選べる。`clean` で検証 JAR を消した場合は基準構成からやり直す。
 2. 検証用プロパティ `ooenProbe` が `materialslib` または `both` の場合**だけ**、ルートプロジェクトから `apply from: 'probes/materialslib/probe.gradle'` する。`devOnlyNonPublishable` に開発名の JAR を二つ追加するだけで、`main` は変更しない。配布・再難読化・公開は行わない。
@@ -25,7 +30,7 @@
 
 [固定ソース](https://github.com/GTNewHorizons/MaterialsLib/tree/f68a8b09d45d126f5c41a6790dfc53e18be4fb02) には調査時点で対応する GitHub リリース／タグが見当たらなかった。全 `src/main/java` を RFG の `recompiled_minecraft-1.7.10.jar`、[GTNHLib 0.5.11 dev](https://github.com/GTNewHorizons/GTNHLib/releases/tag/0.5.11)、JetBrains annotations 24.1.0 に対して Jabel でコンパイルした。上流設定相当の版定数と `mcmod.info` を展開し、ライセンスと上流 Java ソースから得たクラスを同梱した。実行時の GTNHLib はルートの開発構成に従う。
 
-取得 URL と SHA-256 の照合は [`prepare.sh`](prepare.sh) にある。JDK 17.0.21.1、Jabel 1.0.2-GTNH、Java 8 バイトコード（major 52）。次は現行の開発 JAR の SHA-256。版 `0.0.0-dev.f68a8b09d45d` は固定コミットに対応するローカル識別子。
+取得 URL と SHA-256 の照合は [`prepare.sh`](../probes/materialslib/prepare.sh) にある。JDK 17.0.21.1、Jabel 1.0.2-GTNH、Java 8 バイトコード（major 52）。次は現行の開発 JAR の SHA-256。版 `0.0.0-dev.f68a8b09d45d` は固定コミットに対応するローカル識別子。
 
 | JAR | SHA-256 |
 | --- | --- |

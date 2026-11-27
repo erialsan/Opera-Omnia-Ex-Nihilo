@@ -82,7 +82,7 @@ GTNH 側の正式表記は **MaterialsLib**。同プロジェクトは素材関�
 
 前回の計画書本文は参照できなかったため、確認できた会話の命名一覧と素材設計の議論から v0.2 を再構成した。実装順、完了条件、依存が成立しない場合の代替は今回の提案。前回版が入手できた段階で、継承対象の機能と互換性要件を照合する。
 
-計画書の版は **v0.2**、バンドルの形式は **OKF v0.3**。[バンドルの目次](index.md) の YAML に形式の版を記し、計画書は `type` を持つ UTF-8 Markdown のコンセプト文書とした。[^okf]
+計画書の版は **v0.2**、バンドルの形式は **OKF v0.3**。[バンドルの目次](../index.md) の YAML に形式の版を記し、計画書は `type` を持つ UTF-8 Markdown のコンセプト文書とした。[^okf]
 
 [^discussion]: [Exnihilo内部刷新比較](chatgpt-conversation://6b0438a8-b918-83ee-a9cd-1bd97d04ead7)
 [^materialslib]: [GTNewHorizons/MaterialsLib](https://github.com/GTNewHorizons/MaterialsLib)
