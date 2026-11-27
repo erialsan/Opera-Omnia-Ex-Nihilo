@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
+import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
@@ -20,6 +21,8 @@ private const val LOADED = 2
 private const val LAST_PASS = 4
 
 internal class Sieve(private val mesh: Item) : Block(Material.wood) {
+    private lateinit var meshIcon: IIcon
+
     init {
         setBlockName("ooen.sieve")
         setBlockTextureName("minecraft:planks_oak")
@@ -89,10 +92,16 @@ internal class Sieve(private val mesh: Item) : Block(Material.wood) {
         }
 
     @SideOnly(Side.CLIENT)
+    override fun registerBlockIcons(register: IIconRegister) {
+        super.registerBlockIcons(register)
+        meshIcon = registerMeshIcon(register, "minecraft:wool_colored_white")
+    }
+
+    @SideOnly(Side.CLIENT)
     override fun getIcon(side: Int, metadata: Int): IIcon =
         when {
             side != 1 || metadata == FRAME -> super.getIcon(side, metadata)
-            metadata == MESH -> Blocks.wool.getIcon(side, 0)
+            metadata == MESH -> meshIcon
             else -> Blocks.dirt.getIcon(side, 0)
         }
 }

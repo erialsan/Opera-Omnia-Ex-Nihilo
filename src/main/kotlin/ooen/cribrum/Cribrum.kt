@@ -5,7 +5,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.registry.GameRegistry
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.Items
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraftforge.oredict.ShapedOreRecipe
 import ooen.materia.Tags
@@ -22,9 +21,8 @@ object Cribrum {
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
         val mesh =
-            Item()
+            StringMesh()
                 .setUnlocalizedName("ooen.string_mesh")
-                .setTextureName("minecraft:lead")
                 .setCreativeTab(CreativeTabs.tabMaterials)
         val sieve = Sieve(mesh)
         GameRegistry.registerItem(mesh, "string_mesh")

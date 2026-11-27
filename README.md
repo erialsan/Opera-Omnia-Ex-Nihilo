@@ -61,6 +61,8 @@ JarJar の動作確認には、RetroFuturaBootstrap を使う `./gradlew runClie
 - 木のクローク → [Creatio の `crook_wood.png`](https://github.com/BloodyMods/ExNihiloCreatio/blob/75f60692a4257a62ba9f6831866e456d8526ec9d/src/main/resources/assets/exnihilocreatio/textures/items/tools/crook/crook_wood.png)
 - 蚕蛾の幼虫 → [Creatio の `silkworm.png`](https://github.com/BloodyMods/ExNihiloCreatio/blob/75f60692a4257a62ba9f6831866e456d8526ec9d/src/main/resources/assets/exnihilocreatio/textures/items/silkworm.png)
 
+糸のメッシュはクライアントで白い羊毛のテクスチャから格子を生成する。生成した格子を、アイテムアイコンと篩に張った状態の上面に使う。
+
 ## Materia の金属カタログ
 
 初回起動で生成される `config/ooen_materia.cfg` の `materials.metalWhitelist` で対象を指定する。JAOPCA の素材名を大文字・小文字も含めて指定し、編集後は再起動する。合金や別名で検出された素材にも個別の許可が必要。空のリストでは全素材を無効にできる。
