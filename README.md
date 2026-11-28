@@ -6,7 +6,7 @@ description: A SkyBlock resource gathering and processing mod for Minecraft 1.7.
 
 # Opera Omnia Ex Nihilo
 
-**English** · [日本語](README.ja.md) · [简体中文](README.zh-CN.md)
+**English** · [日本語](README.ja.md) · [简体中文](README.cn.md)
 
 A SkyBlock mod for Minecraft 1.7.10. With Fundamentum and Cribrum, you can start with wood and leaves and work your way up to your first sieve. Materia filters the metals detected by JAOPCA through an allowlist and looks up the processing forms already registered in your mod setup.
 
