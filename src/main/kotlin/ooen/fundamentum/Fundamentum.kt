@@ -93,20 +93,21 @@ object Fundamentum {
         if (event.world.isRemote || player.capabilities.isCreativeMode || tool.item != crook) return
         if (event.isSilkTouching) return
 
-        val dropsLarva =
-            if (event.block == infestedLeaves) {
-                infestedLeaves.isMature(event.blockMetadata).also { mature ->
-                    if (mature) event.drops.add(ItemStack(Items.string, 2))
-                }
-            } else {
-                val item = Item.getItemFromBlock(event.block) ?: return
-                val leaf = ItemStack(item, 1, event.block.damageDropped(event.blockMetadata))
-                if (
-                    !event.block.isLeaves(event.world, event.x, event.y, event.z) &&
-                        !matchesOre(leaf, "treeLeaves")
-                )
-                    return
-                event.drops.removeAll { it.item == item }
+        if (event.block == infestedLeaves) {
+            if (infestedLeaves.isMature(event.blockMetadata)) {
+                event.drops.add(ItemStack(Items.string, 2))
+            }
+        } else {
+            val item = Item.getItemFromBlock(event.block) ?: return
+            val leaf = ItemStack(item, 1, event.block.damageDropped(event.blockMetadata))
+            if (
+                !event.block.isLeaves(event.world, event.x, event.y, event.z) &&
+                    !matchesOre(leaf, "treeLeaves")
+            )
+                return
+            event.drops.removeAll { it.item == item }
+            // The original harvest is the first of Creatio's four default rolls.
+            repeat(3) {
                 event.block
                     .getDrops(
                         event.world,
@@ -119,10 +120,9 @@ object Fundamentum {
                     .filterTo(event.drops) {
                         it.item == Items.apple || matchesOre(it, "treeSapling")
                     }
-                true
             }
-        // Give a new crook a reliable first larva, then one every four harvests.
-        if (dropsLarva && tool.itemDamage % 4 == 0) event.drops.add(ItemStack(larva))
+            if (event.world.rand.nextInt(10) == 0) event.drops.add(ItemStack(larva))
+        }
         tool.damageItem(1, player)
         if (tool.stackSize == 0) player.destroyCurrentEquippedItem()
     }
