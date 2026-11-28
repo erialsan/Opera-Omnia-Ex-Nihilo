@@ -1,6 +1,6 @@
-item.ooen.ore_gravel.name=%s Ore Gravel
-item.ooen.ore_sand.name=%s Ore Sand
-item.ooen.ore_dust.name=%s Ore Dust
+tile.ooen.ore_gravel.name=%s Ore Gravel
+tile.ooen.ore_sand.name=%s Ore Sand
+tile.ooen.ore_dust.name=%s Ore Dust
 item.ooen.small_ore_gravel.name=Small %s Ore Gravel
 item.ooen.small_ore_sand.name=Small %s Ore Sand
 item.ooen.small_ore_dust.name=Small %s Ore Dust

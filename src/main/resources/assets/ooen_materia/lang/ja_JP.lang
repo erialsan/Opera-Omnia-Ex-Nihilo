@@ -1,6 +1,6 @@
-item.ooen.ore_gravel.name=%sの鉱石砂利
-item.ooen.ore_sand.name=%sの鉱石砂
-item.ooen.ore_dust.name=%sの鉱石塵
+tile.ooen.ore_gravel.name=%sの鉱石砂利
+tile.ooen.ore_sand.name=%sの鉱石砂
+tile.ooen.ore_dust.name=%sの鉱石塵
 item.ooen.small_ore_gravel.name=小さな%sの鉱石砂利
 item.ooen.small_ore_sand.name=小さな%sの鉱石砂
 item.ooen.small_ore_dust.name=小さな%sの鉱石塵

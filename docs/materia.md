@@ -11,9 +11,9 @@ description: 金属の検出、ホワイトリスト、鉱石素材の登録と�
 
 Materia はホワイトリストにあり、OreDictionary に具体的なインゴットが登録された金属を使う。JAOPCA がある場合は、JAOPCA の金属判定と別名も使う。Forge がインゴット扱いするバニラのレンガは対象外。
 
-各金属について鉱石砂利・鉱石砂・鉱石塵と、それぞれの小片を用意する。対応する OreDictionary 登録があれば再利用し、無ければ Materia がアイテムを登録する。同じ金属・形態の小片4個を 2×2 に並べると通常サイズにまとまる。Materia が登録した通常サイズの素材は、かまどで対応するインゴット1個にできる。
+同じ金属・形態の小片アイテム4個を 2×2 に並べると、Materia の鉱石砂利・鉱石砂・鉱石塵ブロックになる。ブロックは設置でき、かまどで対応するインゴット1個に精錬できる。テクスチャは砂利・砂・塵を金属ごとに着色する。小片は OreDictionary に対応するアイテム登録があれば再利用する。
 
-`MetalCatalog.candidates("Iron", MetalForm.GRAVEL)` のように素材名と形態を指定して候補を取得できる。通常サイズは `ooenOreGravel`、`ooenOreSand`、`ooenOrePowder`、小片は `ooenSmallOreGravel`、`ooenSmallOreSand`、`ooenSmallOrePowder` を接頭辞に使う。
+`MetalCatalog.candidates("Iron", MetalForm.GRAVEL)` のように素材名と形態を指定して候補を取得できる。鉱石ブロックの場合は Materia のブロックが返る。ブロックは `ooenOreGravel`、`ooenOreSand`、`ooenOrePowder`、小片は `ooenSmallOreGravel`、`ooenSmallOreSand`、`ooenSmallOrePowder` を接頭辞に使う。
 
 JAOPCA だけを追加して確認するには `./gradlew runClient25 -PooenProbe=jaopca-baseline` を使う。JAOPCA の JAR は [素材ライブラリの依存検証](dependency-tests.md) と同じ場所に置く。この構成から提供側を追加したときだけ、追加した金属がカタログに現れることを確認できる。
 

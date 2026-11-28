@@ -4,6 +4,7 @@ import com.gtnewhorizon.gtnhlib.util.ItemUtil
 import com.gtnewhorizon.gtnhlib.util.data.ItemId
 import cpw.mods.fml.common.Loader
 import net.minecraft.init.Items
+import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
 import ooen.concreteOreStacks
 import ooen.netheriteIngots
@@ -87,11 +88,16 @@ private object JaopcaMetals {
 
 private fun stacks(metals: Sequence<String>, form: MetalForm): Sequence<ItemStack> =
     metals.flatMap { metal ->
-        concreteOreStacks(form.oreKey(metal))
-            // Forge registers both vanilla brick items under ingot keys.
-            .filter {
-                form != MetalForm.INGOT || (it.item != Items.brick && it.item != Items.netherbrick)
+        concreteOreStacks(form.oreKey(metal)).filter {
+            when (form) {
+                // Forge registers both vanilla brick items under ingot keys.
+                MetalForm.INGOT -> it.item != Items.brick && it.item != Items.netherbrick
+                MetalForm.GRAVEL,
+                MetalForm.SAND,
+                MetalForm.POWDER -> it.item is MateriaOreBlockItem
+                else -> it.item !is ItemBlock
             }
+        }
     }
 
 private fun Sequence<ItemStack>.copies(): List<ItemStack> =
