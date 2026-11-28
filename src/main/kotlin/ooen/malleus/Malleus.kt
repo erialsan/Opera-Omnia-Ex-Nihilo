@@ -19,7 +19,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.AnvilUpdateEvent
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
 import net.minecraftforge.oredict.ShapedOreRecipe
-import ooen.GTNH_LIB_DEPENDENCY
+import ooen.COMMON_DEPENDENCIES
 import ooen.ToolTier
 import ooen.addStackCopies
 import ooen.applyBookEnchantments
@@ -37,10 +37,11 @@ import ooen.netheriteIngots
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
     dependencies =
-        "required-after:ooen_fundamentum;required-after:ooen_materia;$GTNH_LIB_DEPENDENCY",
-    modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
+        "required-after:ooen_fundamentum;required-after:ooen_materia;$COMMON_DEPENDENCIES",
 )
 object Malleus {
+    @JvmStatic @Mod.InstanceFactory private fun modInstance(): Malleus = this
+
     private const val NETHERITE_ID = "netherite_hammer"
     private val netheriteHammer = Hammer(NETHERITE_ID)
     private val dust =

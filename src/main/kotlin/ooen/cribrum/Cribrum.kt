@@ -14,7 +14,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.AnvilUpdateEvent
 import net.minecraftforge.oredict.RecipeSorter
 import net.minecraftforge.oredict.ShapedOreRecipe
-import ooen.GTNH_LIB_DEPENDENCY
+import ooen.COMMON_DEPENDENCIES
 import ooen.applyBookEnchantments
 import ooen.fundamentum.Fundamentum
 import ooen.fundamentum.VanillaWood
@@ -27,10 +27,11 @@ import ooen.netheriteIngots
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
     dependencies =
-        "required-after:ooen_fundamentum;required-after:ooen_malleus;required-after:ooen_materia;$GTNH_LIB_DEPENDENCY",
-    modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
+        "required-after:ooen_fundamentum;required-after:ooen_malleus;required-after:ooen_materia;$COMMON_DEPENDENCIES",
 )
 object Cribrum {
+    @JvmStatic @Mod.InstanceFactory private fun modInstance(): Cribrum = this
+
     private val mesh = StringMesh()
     internal var netheriteAvailable = false
         private set

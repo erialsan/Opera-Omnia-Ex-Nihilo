@@ -7,7 +7,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.registry.GameRegistry
 import net.minecraft.item.ItemStack
 import net.minecraftforge.oredict.ShapedOreRecipe
-import ooen.GTNH_LIB_DEPENDENCY
+import ooen.COMMON_DEPENDENCIES
 import ooen.ToolTier
 import ooen.fundamentum.Fundamentum
 import ooen.materia.Tags
@@ -18,10 +18,11 @@ import ooen.netheriteIngots
     name = "Opera Omnia Ex Nihilo: Vita",
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
-    dependencies = "required-after:ooen_fundamentum;$GTNH_LIB_DEPENDENCY",
-    modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
+    dependencies = "required-after:ooen_fundamentum;$COMMON_DEPENDENCIES",
 )
 object Vita {
+    @JvmStatic @Mod.InstanceFactory private fun modInstance(): Vita = this
+
     private val wateringCans = ToolTier.entries.associateWith(::WateringCan)
 
     @Mod.EventHandler

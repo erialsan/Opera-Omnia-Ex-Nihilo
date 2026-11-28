@@ -6,7 +6,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.common.config.Configuration
 import ooen.BundledJson
-import ooen.GTNH_LIB_DEPENDENCY
+import ooen.COMMON_DEPENDENCIES
 import org.apache.logging.log4j.LogManager
 
 private const val MOD_ID = "ooen_materia"
@@ -17,11 +17,11 @@ private const val MOD_ID = "ooen_materia"
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
     dependencies =
-        "required-after:forgelin@[2.4.3-2.4.10,);" +
-            "required-after:falsepatternlib@[1.12.2,);required-after:ooen_fundamentum;$GTNH_LIB_DEPENDENCY",
-    modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
+        "required-after:falsepatternlib@[1.12.2,);required-after:ooen_fundamentum;$COMMON_DEPENDENCIES",
 )
 object Materia {
+    @JvmStatic @Mod.InstanceFactory private fun modInstance(): Materia = this
+
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
         val defaults =

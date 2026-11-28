@@ -8,7 +8,7 @@ import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import ooen.GTNH_LIB_DEPENDENCY
+import ooen.COMMON_DEPENDENCIES
 import ooen.fundamentum.CompostBarrel
 import ooen.fundamentum.Fundamentum
 import ooen.fundamentum.VanillaWood
@@ -20,10 +20,11 @@ import ooen.materia.Tags
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
     dependencies =
-        "required-after:ooen_fundamentum;required-after:ooen_malleus;$GTNH_LIB_DEPENDENCY",
-    modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
+        "required-after:ooen_fundamentum;required-after:ooen_malleus;$COMMON_DEPENDENCIES",
 )
 object Transmutatio {
+    @JvmStatic @Mod.InstanceFactory private fun modInstance(): Transmutatio = this
+
     internal var crucibleRenderType = 0
         private set
 

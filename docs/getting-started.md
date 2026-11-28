@@ -42,6 +42,8 @@ GitHub の **Actions → Release → Run workflow** で対象ブランチを選�
 - [FalsePatternLib 1.12.2](https://github.com/FalsePattern/FalsePatternLib/releases/tag/1.12.2)
 - [GTNHLib 0.12.11](https://www.curseforge.com/minecraft/mc-mods/gtnhlib/files/9830849)：Fundamentum、Cribrum、Materia の必須依存。手動導入時は GTNHLib が指定する GTNHExtLib と UniMixins も入れる。
 
+Forgelin が未導入か必要な版より古い場合、クライアントは Forge の必須 MOD 不足画面に `forgelin` を表示する。専用サーバーでは Forge のログに不足した依存関係が出て、起動を中断する。
+
 金属カタログは標準構成で OreDictionary を参照する。JAOPCA の金属判定と別名を使う場合は、実行環境に [JAOPCA 1.7.10-W.0.8.32](https://www.curseforge.com/minecraft/mc-mods/jaopca/files/8859967) を追加する。
 
 Materia のホワイトリストの初期値は [同梱 JSON](../src/main/resources/ooen/materia/metal_whitelist.json) にある。既存の `config/ooen_materia.cfg` にホワイトリストがあれば、その値を使う。

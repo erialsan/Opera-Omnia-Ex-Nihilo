@@ -21,7 +21,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
 import net.minecraftforge.oredict.OreDictionary
 import net.minecraftforge.oredict.ShapedOreRecipe
-import ooen.GTNH_LIB_DEPENDENCY
+import ooen.COMMON_DEPENDENCIES
 import ooen.materia.Tags
 
 @Mod(
@@ -29,10 +29,12 @@ import ooen.materia.Tags
     name = "Opera Omnia Ex Nihilo: Fundamentum",
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
-    dependencies = "required-after:forgelin@[2.4.3-2.4.10,);$GTNH_LIB_DEPENDENCY",
-    modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
+    dependencies = COMMON_DEPENDENCIES,
 )
 object Fundamentum {
+    // Forge resolves required mods before calling the instance factory.
+    @JvmStatic @Mod.InstanceFactory private fun modInstance(): Fundamentum = this
+
     internal var barrelRenderType: Int = 0
         private set
 
