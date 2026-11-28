@@ -5,6 +5,8 @@ import cpw.mods.fml.relauncher.SideOnly
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
+import net.minecraft.enchantment.Enchantment
+import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.item.Item
@@ -83,7 +85,7 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
         if (stage in MESH..LAST_PASS && player.isSneaking && held == null) {
             val contents = contents(stage, meshData(world, x, y, z))
             if (changeStage(FRAME)) {
-                meshData(world, x, y, z)?.updateContents(MeshTier.STRING, null)
+                meshData(world, x, y, z)?.setMesh(MeshTier.STRING)
                 for (stack in contents) {
                     if (!player.inventory.addItemStackToInventory(stack)) {
                         dropBlockAsItem(world, x, y, z, stack)
@@ -99,7 +101,7 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
                 if (!tier.isAvailable()) return false
                 val data = meshData(world, x, y, z) ?: return false
                 if (changeStage(MESH)) {
-                    data.updateContents(tier, null)
+                    data.setMesh(tier, held)
                     if (!player.capabilities.isCreativeMode) held.stackSize--
                 }
             }
@@ -108,7 +110,7 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
                 val data = meshData(world, x, y, z) ?: return false
                 val input = SieveRecipes.inputFor(held, data.tier) ?: return false
                 if (changeStage(LOADED)) {
-                    data.updateContents(input = input)
+                    data.updateInput(input)
                     if (!player.capabilities.isCreativeMode) held.stackSize--
                 }
             }
@@ -129,8 +131,13 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
                 val input = loadedInput(data)
                 val tier = data?.tier ?: MeshTier.STRING
                 if (changeStage(MESH)) {
-                    data?.updateContents(input = null)
-                    for (stack in SieveRecipes.roll(input, tier, world.rand)) {
+                    val fortune =
+                        EnchantmentHelper.getEnchantmentLevel(
+                            Enchantment.fortune.effectId,
+                            data?.meshStack(mesh),
+                        )
+                    data?.updateInput(null)
+                    for (stack in SieveRecipes.roll(input, tier, world.rand, fortune)) {
                         dropBlockAsItem(world, x, y, z, stack)
                     }
                 }
@@ -153,8 +160,7 @@ internal class Sieve(private val mesh: Item, private val wood: VanillaWood) : Bl
         }
 
     private fun contents(stage: Int, data: SieveMeshData?): List<ItemStack> = buildList {
-        val tier = data?.tier ?: MeshTier.STRING
-        add(ItemStack(mesh, 1, tier.ordinal))
+        add(data?.meshStack(mesh) ?: ItemStack(mesh))
         if (stage >= LOADED) add(ItemStack(loadedInput(data)))
     }
 

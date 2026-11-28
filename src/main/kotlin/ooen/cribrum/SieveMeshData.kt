@@ -1,6 +1,8 @@
 package ooen.cribrum
 
 import net.minecraft.block.Block
+import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.NetworkManager
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity
@@ -11,11 +13,23 @@ internal class SieveMeshData : TileEntity() {
     var tier: MeshTier = MeshTier.STRING
         private set
 
+    private var meshTag: NBTTagCompound? = null
+
     var input: Block? = null
         private set
 
-    fun updateContents(tier: MeshTier = this.tier, input: Block? = this.input) {
+    fun setMesh(tier: MeshTier, stack: ItemStack? = null) {
         this.tier = tier
+        meshTag = stack?.tagCompound?.copy() as? NBTTagCompound
+        updateInput(null)
+    }
+
+    fun meshStack(item: Item): ItemStack =
+        ItemStack(item, 1, tier.ordinal).also {
+            it.tagCompound = meshTag?.copy() as? NBTTagCompound
+        }
+
+    fun updateInput(input: Block?) {
         this.input = input
         markDirty()
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
@@ -24,6 +38,9 @@ internal class SieveMeshData : TileEntity() {
     override fun writeToNBT(tag: NBTTagCompound) {
         super.writeToNBT(tag)
         tag.setInteger("MeshTier", tier.ordinal)
+        val storedMeshTag = meshTag
+        if (storedMeshTag == null) tag.removeTag("MeshTag")
+        else tag.setTag("MeshTag", storedMeshTag.copy())
         tag.setString(
             "SieveInput",
             input?.let { Block.blockRegistry.getNameForObject(it) }.orEmpty(),
@@ -33,6 +50,9 @@ internal class SieveMeshData : TileEntity() {
     override fun readFromNBT(tag: NBTTagCompound) {
         super.readFromNBT(tag)
         tier = MeshTier.entries.getOrNull(tag.getInteger("MeshTier")) ?: MeshTier.STRING
+        meshTag =
+            if (tag.hasKey("MeshTag", 10)) tag.getCompoundTag("MeshTag").copy() as? NBTTagCompound
+            else null
         val inputId = tag.getString("SieveInput")
         input =
             if (Block.blockRegistry.containsKey(inputId))

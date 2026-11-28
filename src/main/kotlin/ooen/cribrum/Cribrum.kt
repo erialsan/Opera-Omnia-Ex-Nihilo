@@ -3,10 +3,16 @@ package ooen.cribrum
 import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
+import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.registry.GameRegistry
+import net.minecraft.enchantment.Enchantment
+import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
+import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.event.AnvilUpdateEvent
+import net.minecraftforge.oredict.RecipeSorter
 import net.minecraftforge.oredict.ShapedOreRecipe
 import ooen.GTNH_LIB_DEPENDENCY
 import ooen.fundamentum.Fundamentum
@@ -36,6 +42,13 @@ object Cribrum {
         if (event.side.isClient) sieveRenderType = SieveRenderer.register()
         mesh.setCreativeTab(Fundamentum.creativeTab)
         GameRegistry.registerItem(mesh, "string_mesh")
+        MinecraftForge.EVENT_BUS.register(this)
+        RecipeSorter.register(
+            "ooen_cribrum:mesh_upgrade",
+            MeshUpgradeRecipe::class.java,
+            RecipeSorter.Category.SHAPED,
+            "after:forge:shapedore before:minecraft:shapeless",
+        )
         GameRegistry.registerTileEntity(SieveMeshData::class.java, "ooen_cribrum:sieve_mesh")
         GameRegistry.addRecipe(
             ShapedOreRecipe(
@@ -72,6 +85,42 @@ object Cribrum {
         }
     }
 
+    @SubscribeEvent
+    fun enchantMesh(event: AnvilUpdateEvent) {
+        val stack = event.left
+        val book = event.right
+        if (event.output != null || stack.item != mesh || stack.stackSize != 1) return
+        if (book.item != Items.enchanted_book) return
+
+        val fortune = Enchantment.fortune
+        val bookLevel = EnchantmentHelper.getEnchantments(book)[fortune.effectId] ?: return
+        if (bookLevel <= 0) return
+        val enchantments = EnchantmentHelper.getEnchantments(stack)
+        val oldLevel = enchantments[fortune.effectId] ?: 0
+        val level =
+            (if (bookLevel == oldLevel) oldLevel + 1 else maxOf(bookLevel, oldLevel)).coerceAtMost(
+                fortune.maxLevel
+            )
+        if (level <= oldLevel) return
+
+        val output = stack.copy()
+        enchantments[fortune.effectId] = level
+        EnchantmentHelper.setEnchantments(enchantments, output)
+        val name = event.name
+        val rename =
+            if (name.isNullOrBlank()) {
+                output.hasDisplayName().also { if (it) output.func_135074_t() }
+            } else if (name != stack.displayName) {
+                output.setStackDisplayName(name)
+                true
+            } else false
+        output.repairCost = maxOf(stack.repairCost, book.repairCost) + 2
+
+        event.output = output
+        event.cost += 2 * level + if (rename) 5 else 0
+        event.materialCost = 1
+    }
+
     @Mod.EventHandler
     fun onLoadComplete(event: FMLLoadCompleteEvent) {
         SieveRecipes.load()
@@ -82,14 +131,9 @@ object Cribrum {
 
     private fun registerUpgrade(tier: MeshTier, material: ItemStack) {
         GameRegistry.addRecipe(
-            ShapedOreRecipe(
+            MeshUpgradeRecipe(
                 ItemStack(mesh, 1, tier.ordinal),
-                " M ",
-                "MPM",
-                " M ",
-                'M',
                 material,
-                'P',
                 ItemStack(mesh, 1, tier.ordinal - 1),
             )
         )

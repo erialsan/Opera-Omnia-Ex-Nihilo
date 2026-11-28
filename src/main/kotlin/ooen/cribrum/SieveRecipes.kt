@@ -95,18 +95,27 @@ internal object SieveRecipes {
         return block.takeIf { drops[it].orEmpty().any { drop -> tier.oreTier >= drop.minimumTier } }
     }
 
-    fun roll(input: Block, tier: MeshTier, random: Random): List<ItemStack> = buildList {
-        for (drop in drops[input].orEmpty()) {
-            if (
-                tier.oreTier >= drop.minimumTier &&
-                    (drop.percent == 100 || random.nextInt(100) < drop.percent)
-            ) {
-                val outputs = drop.outputs
-                val output =
-                    if (outputs.size == 1) outputs.first()
-                    else outputs[random.nextInt(outputs.size)]
-                add(output.copy())
+    fun roll(input: Block, tier: MeshTier, random: Random, fortune: Int = 0): List<ItemStack> =
+        buildList {
+            val bonusLevel = fortune.coerceIn(0, 3)
+            for (drop in drops[input].orEmpty()) {
+                if (
+                    tier.oreTier >= drop.minimumTier &&
+                        (drop.percent == 100 || random.nextInt(100) < drop.percent)
+                ) {
+                    val outputs = drop.outputs
+                    val output =
+                        if (outputs.size == 1) outputs.first()
+                        else outputs[random.nextInt(outputs.size)]
+                    val multiplier =
+                        if (bonusLevel == 0) 1 else random.nextInt(bonusLevel + 2).coerceAtLeast(1)
+                    var quantity = output.stackSize * multiplier
+                    while (quantity > 0) {
+                        val count = minOf(quantity, output.maxStackSize.coerceAtLeast(1))
+                        add(output.copy().apply { stackSize = count })
+                        quantity -= count
+                    }
+                }
             }
         }
-    }
 }
