@@ -18,6 +18,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
 import net.minecraftforge.oredict.ShapedOreRecipe
 import ooen.GTNH_LIB_DEPENDENCY
+import ooen.ToolTier
 import ooen.fundamentum.Fundamentum
 import ooen.materia.Tags
 import ooen.netheriteIngots
@@ -44,15 +45,9 @@ object Malleus {
     fun preInit(event: FMLPreInitializationEvent) {
         GameRegistry.registerBlock(dust.setCreativeTab(Fundamentum.creativeTab), "dust")
         MinecraftForge.EVENT_BUS.register(this)
-        val materials =
-            mapOf(
-                "wooden_hammer" to "plankWood",
-                "stone_hammer" to "cobblestone",
-                "iron_hammer" to "ingotIron",
-                "diamond_hammer" to "gemDiamond",
-                "emerald_hammer" to "gemEmerald",
-            )
-        for ((id, material) in materials) {
+        for (tier in ToolTier.entries) {
+            val material = tier.material ?: continue
+            val id = "${tier.idPrefix}_hammer"
             val hammer = Hammer(id).setCreativeTab(Fundamentum.creativeTab)
             GameRegistry.registerItem(hammer, id)
             GameRegistry.addRecipe(

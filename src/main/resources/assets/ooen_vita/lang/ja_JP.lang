@@ -1,0 +1,8 @@
+item.ooen.wooden_watering_can.name=木のじょうろ
+item.ooen.stone_watering_can.name=石のじょうろ
+item.ooen.iron_watering_can.name=鉄のじょうろ
+item.ooen.diamond_watering_can.name=ダイヤモンドのじょうろ
+item.ooen.emerald_watering_can.name=エメラルドのじょうろ
+item.ooen.netherite_watering_can.name=ネザライトのじょうろ
+ooen.watering_can.water=水量：%s / %s mB
+ooen.watering_can.area=散水範囲：%s×%s

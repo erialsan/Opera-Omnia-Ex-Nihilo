@@ -16,6 +16,10 @@ description: 同梱テクスチャと参照した実装の出所、クレジッ�
 - [Creatio の篩の操作と連鎖処理](https://github.com/BloodyMods/ExNihiloCreatio/blob/1.12/src/main/java/exnihilocreatio/blocks/BlockSieve.java)
 - [Creatio の篩のクールダウンと進捗処理](https://github.com/BloodyMods/ExNihiloCreatio/blob/1.12/src/main/java/exnihilocreatio/tiles/TileSieve.java)
 
+## じょうろ
+
+1 mB を4 tick ごとに消費する散水間隔は、thedarkcolour の **Ex Deorum** の挙動を参考にした。Vita の実装とテクスチャはこのプロジェクトで作成した。 [Ex Deorum のじょうろ](https://github.com/thedarkcolour/ExDeorum/blob/1.21.1/src/main/java/thedarkcolour/exdeorum/item/WateringCanItem.java)
+
 ## テクスチャ
 
 木のクロークと蚕蛾の幼虫の PNG は **Ex Nihilo: Creatio** から画像を変更せずに収録した。上流のライセンスに記載されたテクスチャのクレジットは **© 2019 Wolforce**。MIT ライセンスと上流の著作権表示の全文を [ExNihiloCreatio-MIT.txt](../src/main/resources/META-INF/licenses/ExNihiloCreatio-MIT.txt) として JAR に同梱する。

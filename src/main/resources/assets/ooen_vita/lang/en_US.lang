@@ -1,0 +1,8 @@
+item.ooen.wooden_watering_can.name=Wooden Watering Can
+item.ooen.stone_watering_can.name=Stone Watering Can
+item.ooen.iron_watering_can.name=Iron Watering Can
+item.ooen.diamond_watering_can.name=Diamond Watering Can
+item.ooen.emerald_watering_can.name=Emerald Watering Can
+item.ooen.netherite_watering_can.name=Netherite Watering Can
+ooen.watering_can.water=Water: %s / %s mB
+ooen.watering_can.area=Watering area: %s×%s

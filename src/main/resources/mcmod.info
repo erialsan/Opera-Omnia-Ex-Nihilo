@@ -35,5 +35,11 @@
 		"description": "Hand hammers for resource processing.",
 		"version": "${modVersion}",
 		"mcversion": "${minecraftVersion}"
+	}, {
+		"modid": "ooen_vita",
+		"name": "Opera Omnia Ex Nihilo: Vita",
+		"description": "Watering cans for crops and saplings.",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}"
 	}]
 }
