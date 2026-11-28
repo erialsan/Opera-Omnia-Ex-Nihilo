@@ -1,13 +1,20 @@
 ---
 type: Credits
 title: クレジットとライセンス
-description: 同梱テクスチャの作者、出所、適用ライセンス。
+description: 同梱テクスチャと参照した実装の出所、クレジット、適用ライセンス。
 ---
 # クレジットとライセンス
 
 ## プロジェクト
 
 リポジトリのライセンスは GNU LGPL v3。本文は [LICENSE](../LICENSE) を参照。
+
+## 篩の操作
+
+手動で振るう間隔、メッシュの効率強化による進捗補正、5×5 の篩への素材配布と連鎖処理は **Ex Nihilo: Creatio** の挙動を参照し、Kotlin で実装した。参照元は MIT ライセンスで、著作権表示とライセンス本文を [ExNihiloCreatio-MIT.txt](../src/main/resources/META-INF/licenses/ExNihiloCreatio-MIT.txt) として JAR に同梱する。
+
+- [Creatio の篩の操作と連鎖処理](https://github.com/BloodyMods/ExNihiloCreatio/blob/1.12/src/main/java/exnihilocreatio/blocks/BlockSieve.java)
+- [Creatio の篩のクールダウンと進捗処理](https://github.com/BloodyMods/ExNihiloCreatio/blob/1.12/src/main/java/exnihilocreatio/tiles/TileSieve.java)
 
 ## テクスチャ
 

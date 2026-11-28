@@ -92,19 +92,23 @@ object Cribrum {
         if (event.output != null || stack.item != mesh || stack.stackSize != 1) return
         if (book.item != Items.enchanted_book) return
 
-        val fortune = Enchantment.fortune
-        val bookLevel = EnchantmentHelper.getEnchantments(book)[fortune.effectId] ?: return
-        if (bookLevel <= 0) return
+        val bookEnchantments = EnchantmentHelper.getEnchantments(book)
         val enchantments = EnchantmentHelper.getEnchantments(stack)
-        val oldLevel = enchantments[fortune.effectId] ?: 0
-        val level =
-            (if (bookLevel == oldLevel) oldLevel + 1 else maxOf(bookLevel, oldLevel)).coerceAtMost(
-                fortune.maxLevel
-            )
-        if (level <= oldLevel) return
+        var cost = 0
+        for (enchantment in listOf(Enchantment.fortune, Enchantment.efficiency)) {
+            val id = enchantment.effectId
+            val bookLevel = bookEnchantments[id] ?: continue
+            if (bookLevel <= 0) continue
+            val oldLevel = enchantments[id] ?: 0
+            val combined = if (bookLevel == oldLevel) oldLevel + 1 else maxOf(bookLevel, oldLevel)
+            val level = combined.coerceAtMost(enchantment.maxLevel)
+            if (level <= oldLevel) continue
+            enchantments[id] = level
+            cost += 2 * level
+        }
+        if (cost == 0) return
 
         val output = stack.copy()
-        enchantments[fortune.effectId] = level
         EnchantmentHelper.setEnchantments(enchantments, output)
         val name = event.name
         val rename =
@@ -117,7 +121,7 @@ object Cribrum {
         output.repairCost = maxOf(stack.repairCost, book.repairCost) + 2
 
         event.output = output
-        event.cost += 2 * level + if (rename) 5 else 0
+        event.cost += cost + if (rename) 5 else 0
         event.materialCost = 1
     }
 

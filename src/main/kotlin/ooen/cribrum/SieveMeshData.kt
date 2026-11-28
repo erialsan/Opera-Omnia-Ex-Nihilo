@@ -18,6 +18,11 @@ internal class SieveMeshData : TileEntity() {
     var input: Block? = null
         private set
 
+    var progress = 0
+        private set
+
+    private var nextSiftTick = 0L
+
     fun setMesh(tier: MeshTier, stack: ItemStack? = null) {
         this.tier = tier
         meshTag = stack?.tagCompound?.copy() as? NBTTagCompound
@@ -31,8 +36,18 @@ internal class SieveMeshData : TileEntity() {
 
     fun updateInput(input: Block?) {
         this.input = input
+        progress = 0
         markDirty()
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+    }
+
+    fun advance(amount: Int): Boolean {
+        val tick = worldObj.totalWorldTime
+        if (tick < nextSiftTick) return false
+        nextSiftTick = tick + 4
+        progress = (progress + amount).coerceAtMost(100)
+        markDirty()
+        return true
     }
 
     override fun writeToNBT(tag: NBTTagCompound) {
@@ -45,6 +60,7 @@ internal class SieveMeshData : TileEntity() {
             "SieveInput",
             input?.let { Block.blockRegistry.getNameForObject(it) }.orEmpty(),
         )
+        tag.setInteger("SieveProgress", progress)
     }
 
     override fun readFromNBT(tag: NBTTagCompound) {
@@ -58,6 +74,7 @@ internal class SieveMeshData : TileEntity() {
             if (Block.blockRegistry.containsKey(inputId))
                 Block.blockRegistry.getObject(inputId) as? Block
             else null
+        progress = tag.getInteger("SieveProgress").coerceIn(0, 99)
     }
 
     override fun getDescriptionPacket(): S35PacketUpdateTileEntity {
