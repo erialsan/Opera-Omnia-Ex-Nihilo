@@ -12,3 +12,4 @@ tile.ooen.sieve_jungle.name=Jungle Sieve
 tile.ooen.sieve_acacia.name=Acacia Sieve
 tile.ooen.sieve_dark_oak.name=Dark Oak Sieve
 ooen.sieve.progress=Sifting: %s/%s.
+item.ooen.stone_pebble.name=Stone Pebble

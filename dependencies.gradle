@@ -35,18 +35,18 @@
  */
 dependencies {
     compileOnly("curse.maven:jaopca-266936:8859967") { transitive = false } // JAOPCA 1.7.10-W.0.8.32
-    devOnlyNonPublishable("com.github.GTNewHorizons:waila:1.19.34:dev") { transitive = false }
+    devOnlyNonPublishable("com.github.GTNewHorizons:waila:1.20.3:dev") { transitive = false }
     runtimeOnlyNonPublishable("com.falsepattern:forgelin-mc1.7.10:2.4.3-2.4.10:dev") { transitive = false }
     runtimeOnlyNonPublishable("com.falsepattern:falsepatternlib-mc1.7.10:1.12.2:dev")
     implementation("com.github.GTNewHorizons:GTNHLib:0.12.11:dev")
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.9.16-GTNH:dev")
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.9.18-GTNH:dev")
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:2.2.47:dev")
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:CoreTweaks:0.3.6.1-GTNH:dev")
     runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:6su8A6OH:A2m3mnBQ")) // BugTorch 1.3.1
     runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:xTJanN3v:pHrxpfYF")) // ArchaicFix 0.8.0
     runtimeOnlyNonPublishable("com.mitchej123:JarJar:0.4.2-beta:dev")
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:CraftTweaker:3.5.0:dev") {transitive = false}
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:Hodgepodge:2.8.10:dev") {transitive = false}
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:Hodgepodge:2.8.14:dev") {transitive = false}
     // Match the ChunkAPI and EndlessIDs versions ArchaicFix 0.8.0 was compiled against.
     runtimeOnlyNonPublishable("com.falsepattern:chunkapi-mc1.7.10:0.8.1:dev") { transitive = false }
     runtimeOnlyNonPublishable("com.falsepattern:endlessids-mc1.7.10:1.7.1:dev") { transitive = false }

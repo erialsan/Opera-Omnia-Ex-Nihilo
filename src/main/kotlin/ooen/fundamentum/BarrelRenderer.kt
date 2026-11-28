@@ -12,12 +12,13 @@ import ooen.client.OpenBlockRenderer.Surface
 internal object BarrelRenderer {
     fun register(): Int =
         OpenBlockRenderer.register(parts, INNER_MIN, INNER_MAX) { _, _, _, _, _, fill ->
+            val contents = barrelSurfaceBlock(fill)
             val height =
                 FLOOR_TOP +
                     (FILL_TOP - FLOOR_TOP) * fill.coerceAtMost(COMPOST_CAPACITY) / COMPOST_CAPACITY
             when {
                 fill == 0 -> null
-                fill >= COMPOST_READY -> Surface(Blocks.dirt.getIcon(1, 0), height)
+                contents != null -> Surface(contents.getIcon(1, 0), height)
                 else ->
                     Surface(
                         Blocks.leaves.getIcon(1, 0),

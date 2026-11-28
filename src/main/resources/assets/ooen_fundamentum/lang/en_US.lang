@@ -12,3 +12,4 @@ tile.ooen.barrel_dark_oak.name=Dark Oak Compost Barrel
 ooen.barrel.fill=Compost barrel: %s/%s leaves.
 ooen.barrel.working=The leaves are composting.
 ooen.barrel.ready=Compost is ready. Right-click with an empty hand to collect dirt.
+ooen.barrel.liquid=%s: %s mB

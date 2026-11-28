@@ -1,5 +1,11 @@
 [
   { "input": "minecraft:dirt", "minimumTier": 0, "output": "minecraft:wheat_seeds", "percent": 100 },
+  { "input": "minecraft:dirt", "minimumTier": 0, "output": "ooen_cribrum:stone_pebble", "percent": 100 },
+  { "input": "minecraft:dirt", "minimumTier": 0, "output": "ooen_cribrum:stone_pebble", "percent": 100 },
+  { "input": "minecraft:dirt", "minimumTier": 0, "output": "ooen_cribrum:stone_pebble", "percent": 50 },
+  { "input": "minecraft:dirt", "minimumTier": 0, "output": "ooen_cribrum:stone_pebble", "percent": 50 },
+  { "input": "minecraft:dirt", "minimumTier": 0, "output": "ooen_cribrum:stone_pebble", "percent": 10 },
+  { "input": "minecraft:dirt", "minimumTier": 0, "output": "ooen_cribrum:stone_pebble", "percent": 10 },
   { "input": "minecraft:gravel", "minimumTier": 0, "output": "minecraft:flint", "percent": 100 },
   { "input": "ooen_malleus:dust", "minimumTier": 0, "output": "minecraft:gunpowder", "percent": 15 },
 

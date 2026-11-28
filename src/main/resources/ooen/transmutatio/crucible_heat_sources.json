@@ -1,0 +1,9 @@
+[
+  { "block": "minecraft:torch", "mbPerTick": 1 },
+  { "block": "minecraft:fire", "mbPerTick": 2 },
+  { "block": "minecraft:lava", "mbPerTick": 3 },
+  { "block": "minecraft:flowing_lava", "mbPerTick": 3 },
+  { "ore": "blockUranium", "mbPerTick": 10 },
+  { "ore": "blockPlutonium", "mbPerTick": 20 },
+  { "ore": "blockDraconiumAwakened", "mbPerTick": 120 }
+]

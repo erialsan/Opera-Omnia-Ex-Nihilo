@@ -9,6 +9,7 @@ import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.AnvilUpdateEvent
@@ -42,6 +43,13 @@ object Cribrum {
         if (event.side.isClient) sieveRenderType = SieveRenderer.register()
         mesh.setCreativeTab(Fundamentum.creativeTab)
         GameRegistry.registerItem(mesh, "string_mesh")
+        val pebble =
+            Item()
+                .setUnlocalizedName("ooen.stone_pebble")
+                .setTextureName("ooen_cribrum:stone_pebble")
+                .setCreativeTab(Fundamentum.creativeTab)
+        GameRegistry.registerItem(pebble, "stone_pebble")
+        GameRegistry.addShapedRecipe(ItemStack(Blocks.cobblestone), "PP", "PP", 'P', pebble)
         MinecraftForge.EVENT_BUS.register(this)
         RecipeSorter.register(
             "ooen_cribrum:mesh_upgrade",
