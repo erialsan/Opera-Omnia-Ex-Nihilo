@@ -83,7 +83,7 @@ private class OreFragment(
     override fun getColorFromItemStack(stack: ItemStack, pass: Int): Int = color
 }
 
-private class OreBlock(private val metal: String, form: MetalForm, private val color: Int) :
+internal class OreBlock(val metal: String, val form: MetalForm, private val color: Int) :
     Block(Material.sand) {
     init {
         setBlockName("ooen.${form.texture}")

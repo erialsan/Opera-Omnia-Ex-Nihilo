@@ -6,7 +6,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.registry.GameRegistry
 import net.minecraft.enchantment.Enchantment
-import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.Item
@@ -16,6 +15,7 @@ import net.minecraftforge.event.AnvilUpdateEvent
 import net.minecraftforge.oredict.RecipeSorter
 import net.minecraftforge.oredict.ShapedOreRecipe
 import ooen.GTNH_LIB_DEPENDENCY
+import ooen.applyBookEnchantments
 import ooen.fundamentum.Fundamentum
 import ooen.fundamentum.VanillaWood
 import ooen.materia.Tags
@@ -95,42 +95,9 @@ object Cribrum {
 
     @SubscribeEvent
     fun enchantMesh(event: AnvilUpdateEvent) {
-        val stack = event.left
-        val book = event.right
-        if (event.output != null || stack.item != mesh || stack.stackSize != 1) return
-        if (book.item != Items.enchanted_book) return
-
-        val bookEnchantments = EnchantmentHelper.getEnchantments(book)
-        val enchantments = EnchantmentHelper.getEnchantments(stack)
-        var cost = 0
-        for (enchantment in listOf(Enchantment.fortune, Enchantment.efficiency)) {
-            val id = enchantment.effectId
-            val bookLevel = bookEnchantments[id] ?: continue
-            if (bookLevel <= 0) continue
-            val oldLevel = enchantments[id] ?: 0
-            val combined = if (bookLevel == oldLevel) oldLevel + 1 else maxOf(bookLevel, oldLevel)
-            val level = combined.coerceAtMost(enchantment.maxLevel)
-            if (level <= oldLevel) continue
-            enchantments[id] = level
-            cost += 2 * level
+        if (event.left.item == mesh) {
+            event.applyBookEnchantments(Enchantment.fortune, Enchantment.efficiency)
         }
-        if (cost == 0) return
-
-        val output = stack.copy()
-        EnchantmentHelper.setEnchantments(enchantments, output)
-        val name = event.name
-        val rename =
-            if (name.isNullOrBlank()) {
-                output.hasDisplayName().also { if (it) output.func_135074_t() }
-            } else if (name != stack.displayName) {
-                output.setStackDisplayName(name)
-                true
-            } else false
-        output.repairCost = maxOf(stack.repairCost, book.repairCost) + 2
-
-        event.output = output
-        event.cost += cost + if (rename) 5 else 0
-        event.materialCost = 1
     }
 
     @Mod.EventHandler

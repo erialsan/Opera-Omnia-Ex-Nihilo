@@ -10,16 +10,24 @@ import cpw.mods.fml.relauncher.SideOnly
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.creativetab.CreativeTabs
+import net.minecraft.enchantment.Enchantment
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.event.AnvilUpdateEvent
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent
 import net.minecraftforge.oredict.ShapedOreRecipe
 import ooen.GTNH_LIB_DEPENDENCY
 import ooen.ToolTier
+import ooen.addStackCopies
+import ooen.applyBookEnchantments
+import ooen.fortuneMultiplier
 import ooen.fundamentum.Fundamentum
+import ooen.materia.MetalCatalog
+import ooen.materia.MetalForm
+import ooen.materia.OreBlock
 import ooen.materia.Tags
 import ooen.netheriteIngots
 
@@ -28,7 +36,8 @@ import ooen.netheriteIngots
     name = "Opera Omnia Ex Nihilo: Malleus",
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
-    dependencies = "required-after:ooen_fundamentum;$GTNH_LIB_DEPENDENCY",
+    dependencies =
+        "required-after:ooen_fundamentum;required-after:ooen_materia;$GTNH_LIB_DEPENDENCY",
     modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
 )
 object Malleus {
@@ -74,20 +83,40 @@ object Malleus {
     }
 
     @SubscribeEvent
+    fun enchantHammer(event: AnvilUpdateEvent) {
+        if (event.left.item is Hammer) event.applyBookEnchantments(Enchantment.fortune)
+    }
+
+    @SubscribeEvent
     fun crushHarvest(event: HarvestDropsEvent) {
         val player = event.harvester ?: return
         if (event.world.isRemote || player.capabilities.isCreativeMode || event.isSilkTouching)
             return
         if (player.currentEquippedItem?.item !is Hammer) return
-        val output = crushedBlock(event.block) ?: return
+        val metal = oreGravelMetal(event.block)
+        val output =
+            if (metal == null) ItemStack(crushedBlock(event.block) ?: return)
+            else MetalCatalog.candidates(metal, MetalForm.SMALL_SAND).firstOrNull() ?: return
+        val quantity =
+            if (metal == null) 1
+            else {
+                val random = event.world.rand
+                (4 + random.nextInt(2)) * fortuneMultiplier(random, event.fortuneLevel)
+            }
         val original = Item.getItemFromBlock(event.block)
         event.drops.removeAll { stack ->
             stack.item == original || (event.block == Blocks.gravel && stack.item == Items.flint)
         }
-        event.drops.add(ItemStack(output))
+        event.drops.addStackCopies(output, quantity)
     }
 
-    internal fun crushedBlock(block: Block): Block? =
+    internal fun canCrush(block: Block): Boolean =
+        oreGravelMetal(block) != null || crushedBlock(block) != null
+
+    private fun oreGravelMetal(block: Block): String? =
+        (block as? OreBlock)?.takeIf { it.form == MetalForm.GRAVEL }?.metal
+
+    private fun crushedBlock(block: Block): Block? =
         when (block) {
             Blocks.cobblestone -> Blocks.gravel
             Blocks.gravel -> Blocks.sand
@@ -104,11 +133,10 @@ private class Hammer(id: String) : Item() {
         setFull3D()
     }
 
-    override fun canHarvestBlock(block: Block, stack: ItemStack): Boolean =
-        Malleus.crushedBlock(block) != null
+    override fun canHarvestBlock(block: Block, stack: ItemStack): Boolean = Malleus.canCrush(block)
 
     override fun getDigSpeed(stack: ItemStack, block: Block, metadata: Int): Float =
-        if (Malleus.crushedBlock(block) != null) 4f else super.getDigSpeed(stack, block, metadata)
+        if (Malleus.canCrush(block)) 4f else super.getDigSpeed(stack, block, metadata)
 
     @SideOnly(Side.CLIENT)
     override fun getSubItems(item: Item, tab: CreativeTabs?, items: MutableList<ItemStack>) {

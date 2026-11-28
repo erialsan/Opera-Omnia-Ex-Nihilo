@@ -8,7 +8,9 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraftforge.oredict.OreDictionary
 import ooen.BundledJson
+import ooen.addStackCopies
 import ooen.concreteOreStacks
+import ooen.fortuneMultiplier
 import ooen.materia.MetalCatalog
 import ooen.materia.MetalForm
 
@@ -97,7 +99,6 @@ internal object SieveRecipes {
 
     fun roll(input: Block, tier: MeshTier, random: Random, fortune: Int = 0): List<ItemStack> =
         buildList {
-            val bonusLevel = fortune.coerceIn(0, 3)
             for (drop in drops[input].orEmpty()) {
                 if (
                     tier.oreTier >= drop.minimumTier &&
@@ -107,14 +108,7 @@ internal object SieveRecipes {
                     val output =
                         if (outputs.size == 1) outputs.first()
                         else outputs[random.nextInt(outputs.size)]
-                    val multiplier =
-                        if (bonusLevel == 0) 1 else random.nextInt(bonusLevel + 2).coerceAtLeast(1)
-                    var quantity = output.stackSize * multiplier
-                    while (quantity > 0) {
-                        val count = minOf(quantity, output.maxStackSize.coerceAtLeast(1))
-                        add(output.copy().apply { stackSize = count })
-                        quantity -= count
-                    }
+                    addStackCopies(output, output.stackSize * fortuneMultiplier(random, fortune))
                 }
             }
         }
