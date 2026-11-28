@@ -20,7 +20,7 @@ Minecraft **1.7.10**、Forge **10.13.4.1614**、MCP **stable 12** を使う。�
 2. Wayland 環境に合わせ、クライアントは **`./gradlew runClient25`** でタイトルまで起動する（クライアントの実行環境は Java 25）。JAOPCA を追加していない基準構成では、FML ログに `Materia metals: count=2 names=[Gold, Iron]` が出る。
 3. `./gradlew runServer25` で開発用専用サーバーも起動する。初回の EULA 確認には、内容に同意する場合のみ応答する。サーバーでも同じログを確認し、`stop` で終了する。本番ワールドは使わない。
 
-`./gradlew build` が出力する配布用ファイルは `build/libs/opera-omnia-ex-nihilo-<version>.jar`。Fundamentum、Materia、Cribrum、Malleus、Transmutatio、Vita がこの1本に入る。版番号の後ろにさらに `-dev`、`-predowngrade`、`-sources` が付く JAR は開発用。
+`./gradlew build` が出力する配布用ファイルは `build/libs/opera-omnia-ex-nihilo-<version>.jar`。Fundamentum、Materia、Cribrum、Malleus、Transmutatio、Vita、Genesis がこの1本に入る。版番号の後ろにさらに `-dev`、`-predowngrade`、`-sources` が付く JAR は開発用。
 
 Kotlin 移行後の実測（2026-11-26）：`build` と `runClient25` が成功。Forgelin が Kotlin 2.4.10 をロードし、Materia のロード完了時に `ingotIron entries=1` を確認した。MaterialsLib・JAOPCA は未導入。`runServer25` は初回の EULA 確認で停止したため、専用サーバーは未検証。
 

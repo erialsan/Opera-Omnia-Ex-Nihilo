@@ -21,6 +21,10 @@ description: 同梱テクスチャと参照した実装の出所、クレジッ�
 
 1 mB を4 tick ごとに消費する散水間隔は、thedarkcolour の **Ex Deorum** の挙動を参考にした。Vita の実装とテクスチャはこのプロジェクトで作成した。 [Ex Deorum のじょうろ](https://github.com/thedarkcolour/ExDeorum/blob/1.21.1/src/main/java/thedarkcolour/exdeorum/item/WateringCanItem.java)
 
+## ワールド生成
+
+Genesis の Void World は、Ex Deorum の初期スポーン時の植樹と、LexManos の YUNoMakeGoodMap の空のワールドタイプを参考に、Forge 1.7.10 向けに実装した。 [Ex Deorum のスポーン処理](https://github.com/thedarkcolour/ExDeorum/blob/1.21.1/src/main/java/thedarkcolour/exdeorum/event/EventHandler.java) · [YUNoMakeGoodMap のワールドタイプ](https://github.com/LexManos/YUNoMakeGoodMap/blob/master/src/main/java/net/minecraftforge/lex/yunomakegoodmap/VoidWorldType.java)
+
 ## テクスチャ
 
 木のクロークと蚕蛾の幼虫の PNG は **Ex Nihilo: Creatio** から画像を変更せずに収録した。上流のライセンスに記載されたテクスチャのクレジットは **© 2019 Wolforce**。MIT ライセンスと上流の著作権表示の全文を [ExNihiloCreatio-MIT.txt](../src/main/resources/META-INF/licenses/ExNihiloCreatio-MIT.txt) として JAR に同梱する。

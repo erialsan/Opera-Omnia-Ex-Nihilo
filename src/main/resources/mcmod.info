@@ -47,5 +47,11 @@
 		"description": "Barrel reactions, water production, and crucibles for melting cobblestone.",
 		"version": "${modVersion}",
 		"mcversion": "${minecraftVersion}"
+	}, {
+		"modid": "ooen_genesis",
+		"name": "Opera Omnia Ex Nihilo: Genesis",
+		"description": "SkyBlock world generation with an oak tree on a single dirt block.",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}"
 	}]
 }
