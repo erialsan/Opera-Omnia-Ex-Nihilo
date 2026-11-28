@@ -19,9 +19,11 @@ internal object SieveRecipes {
     private const val METAL_TIERS = "/ooen/cribrum/metal_tiers.json"
     private const val DEFAULT_METAL_TIER = 2
 
-    private class Drop(val minimumTier: Int, val outputs: List<ItemStack>, val percent: Int)
+    class Drop(val minimumTier: Int, val outputs: List<ItemStack>, val percent: Int)
 
     private lateinit var drops: Map<Block, List<Drop>>
+
+    fun entries(): Map<Block, List<Drop>> = drops
 
     fun load() {
         val metalTiers = buildMap {

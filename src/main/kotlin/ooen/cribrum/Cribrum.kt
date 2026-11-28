@@ -20,6 +20,7 @@ import ooen.fundamentum.Fundamentum
 import ooen.fundamentum.VanillaWood
 import ooen.materia.Tags
 import ooen.netheriteIngots
+import ooen.registerNeiMetadata
 
 @Mod(
     modid = "ooen_cribrum",
@@ -41,7 +42,10 @@ object Cribrum {
 
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
-        if (event.side.isClient) sieveRenderType = SieveRenderer.register()
+        if (event.side.isClient) {
+            sieveRenderType = SieveRenderer.register()
+            registerNeiMetadata("ooen_cribrum", "sieve")
+        }
         mesh.setCreativeTab(Fundamentum.creativeTab)
         GameRegistry.registerItem(mesh, "string_mesh")
         val pebble =

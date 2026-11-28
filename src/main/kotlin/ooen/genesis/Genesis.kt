@@ -1,9 +1,13 @@
 package ooen.genesis
 
+import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent
 import java.util.Random
+import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.init.Blocks
 import net.minecraft.world.World
 import net.minecraft.world.WorldServer
@@ -19,16 +23,18 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.world.WorldEvent
 import ooen.COMMON_DEPENDENCIES
 import ooen.materia.Tags
+import ooen.vita.Vita
 
 private const val START_XZ = 8
 private const val DIRT_Y = 64
+private const val STARTER_CAN_RECEIVED = "ooen_genesis:starter_can_received"
 
 @Mod(
     modid = "ooen_genesis",
     name = "Opera Omnia Ex Nihilo: Genesis",
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
-    dependencies = COMMON_DEPENDENCIES,
+    dependencies = "required-after:ooen_vita;$COMMON_DEPENDENCIES",
 )
 object Genesis {
     private val skyblock = SkyblockWorldType()
@@ -38,6 +44,25 @@ object Genesis {
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
         MinecraftForge.EVENT_BUS.register(this)
+        FMLCommonHandler.instance().bus().register(this)
+    }
+
+    @SubscribeEvent
+    fun giveStarterCan(event: PlayerLoggedInEvent) {
+        val player = event.player as? EntityPlayerMP ?: return
+        if (player.serverForPlayer.worldInfo.terrainType !== skyblock) return
+
+        val data = player.entityData
+        val persisted = data.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG)
+        if (persisted.getBoolean(STARTER_CAN_RECEIVED)) return
+
+        val can = Vita.starterWateringCan()
+        if (!player.inventory.addItemStackToInventory(can)) {
+            val dropped = player.dropPlayerItemWithRandomChoice(can, false) ?: return
+            dropped.delayBeforeCanPickup = 0
+        }
+        persisted.setBoolean(STARTER_CAN_RECEIVED, true)
+        data.setTag(EntityPlayer.PERSISTED_NBT_TAG, persisted)
     }
 
     @SubscribeEvent

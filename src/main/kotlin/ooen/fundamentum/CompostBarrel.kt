@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.IIcon
 import net.minecraft.util.StatCollector
@@ -17,12 +18,45 @@ import net.minecraft.world.World
 import ooen.exchangeBucket
 
 internal const val COMPOST_CAPACITY = 8
+internal const val COMPOST_TICKS = 200
 internal const val COMPOST_READY = COMPOST_CAPACITY + 1
 internal const val BARREL_WATER = 10
 internal const val BARREL_LAVA = 11
 private const val BARREL_CLAY = 12
 private const val BARREL_QUARTZ = 13
 private const val BARREL_END_STONE = 14
+
+internal enum class BarrelReaction(
+    val liquid: Int,
+    val result: Int,
+    val ingredient: () -> Item?,
+    val output: () -> ItemStack,
+) {
+    CLAY(
+        BARREL_WATER,
+        BARREL_CLAY,
+        { GameRegistry.findItem("ooen_malleus", "dust") },
+        {
+            ItemStack(Blocks.clay)
+        },
+    ),
+    QUARTZ(BARREL_LAVA, BARREL_QUARTZ, { Items.redstone }, { ItemStack(Items.quartz) }),
+    END_STONE(
+        BARREL_LAVA,
+        BARREL_END_STONE,
+        { Items.glowstone_dust },
+        {
+            ItemStack(Blocks.end_stone)
+        },
+    ),
+}
+
+internal fun barrelBucket(liquid: Int): Item? =
+    when (liquid) {
+        BARREL_WATER -> Items.water_bucket
+        BARREL_LAVA -> Items.lava_bucket
+        else -> null
+    }
 
 internal class CompostBarrel(private val wood: VanillaWood?) :
     Block(if (wood == null) Material.rock else Material.wood) {
@@ -58,7 +92,7 @@ internal class CompostBarrel(private val wood: VanillaWood?) :
         val fill = world.getBlockMetadata(x, y, z)
         val held = player.currentEquippedItem
         if (held == null) {
-            val product = product(fill) ?: return false
+            val product = barrelProduct(fill) ?: return false
             if (!world.isRemote && world.setBlockMetadataWithNotify(x, y, z, 0, 3)) {
                 dropBlockAsItem(world, x, y, z, product)
             }
@@ -78,25 +112,19 @@ internal class CompostBarrel(private val wood: VanillaWood?) :
             }
             return true
         }
-        if (held.item == Items.bucket && (fill == BARREL_WATER || fill == BARREL_LAVA)) {
+        val filledBucket = barrelBucket(fill)
+        if (held.item == Items.bucket && filledBucket != null) {
             if (!world.isRemote && world.setBlockMetadataWithNotify(x, y, z, 0, 3)) {
-                val result = if (fill == BARREL_WATER) Items.water_bucket else Items.lava_bucket
-                player.exchangeBucket(held, result)
+                player.exchangeBucket(held, filledBucket)
             }
             return true
         }
         val mixed =
-            when {
-                fill == BARREL_WATER &&
-                    held.item == GameRegistry.findItem("ooen_malleus", "dust") -> BARREL_CLAY
-                fill == BARREL_LAVA && held.item == Items.redstone -> BARREL_QUARTZ
-                fill == BARREL_LAVA && held.item == Items.glowstone_dust -> BARREL_END_STONE
-                else -> null
-            }
+            BarrelReaction.entries.firstOrNull { it.liquid == fill && it.ingredient() == held.item }
         if (mixed != null) {
             if (
                 !world.isRemote &&
-                    world.setBlockMetadataWithNotify(x, y, z, mixed, 3) &&
+                    world.setBlockMetadataWithNotify(x, y, z, mixed.result, 3) &&
                     !player.capabilities.isCreativeMode
             ) {
                 held.stackSize--
@@ -106,7 +134,8 @@ internal class CompostBarrel(private val wood: VanillaWood?) :
         if (fill >= COMPOST_CAPACITY || !PlantInputs.accepts(held)) return false
         if (!world.isRemote && world.setBlockMetadataWithNotify(x, y, z, fill + 1, 3)) {
             if (!player.capabilities.isCreativeMode) held.stackSize--
-            if (fill + 1 == COMPOST_CAPACITY) world.scheduleBlockUpdate(x, y, z, this, 200)
+            if (fill + 1 == COMPOST_CAPACITY)
+                world.scheduleBlockUpdate(x, y, z, this, COMPOST_TICKS)
         }
         return true
     }
@@ -132,7 +161,7 @@ internal class CompostBarrel(private val wood: VanillaWood?) :
         fortune: Int,
     ): ArrayList<ItemStack> =
         super.getDrops(world, x, y, z, metadata, fortune).apply {
-            if (metadata > COMPOST_READY) product(metadata)?.let(::add)
+            if (metadata > COMPOST_READY) barrelProduct(metadata)?.let(::add)
         }
 
     fun compostStatus(metadata: Int): String =
@@ -142,7 +171,7 @@ internal class CompostBarrel(private val wood: VanillaWood?) :
             BARREL_WATER -> liquidStatus(Blocks.water)
             BARREL_LAVA -> liquidStatus(Blocks.lava)
             else ->
-                product(metadata)?.displayName
+                barrelProduct(metadata)?.displayName
                     ?: StatCollector.translateToLocalFormatted(
                         "ooen.barrel.fill",
                         metadata,
@@ -152,16 +181,11 @@ internal class CompostBarrel(private val wood: VanillaWood?) :
 
     private fun liquidStatus(block: Block): String =
         StatCollector.translateToLocalFormatted("ooen.barrel.liquid", block.localizedName, 1000)
-
-    private fun product(fill: Int): ItemStack? =
-        when (fill) {
-            COMPOST_READY -> ItemStack(Blocks.dirt)
-            BARREL_CLAY -> ItemStack(Blocks.clay)
-            BARREL_QUARTZ -> ItemStack(Items.quartz)
-            BARREL_END_STONE -> ItemStack(Blocks.end_stone)
-            else -> null
-        }
 }
+
+internal fun barrelProduct(fill: Int): ItemStack? =
+    if (fill == COMPOST_READY) ItemStack(Blocks.dirt)
+    else BarrelReaction.entries.firstOrNull { it.result == fill }?.output?.invoke()
 
 internal fun barrelSurfaceBlock(fill: Int): Block? =
     when (fill) {

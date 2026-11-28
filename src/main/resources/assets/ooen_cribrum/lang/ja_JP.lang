@@ -15,3 +15,5 @@ ooen.sieve.progress=篩っています：%s/%s
 item.ooen.stone_pebble.name=小石
 item.ooen.grass_seeds.name=草の種
 item.ooen.mycelium_spores.name=菌糸の胞子
+ooen.nei.sieve=篩
+ooen.nei.sieve.chance=幸運なし：%s

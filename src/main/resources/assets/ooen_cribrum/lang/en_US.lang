@@ -15,3 +15,5 @@ ooen.sieve.progress=Sifting: %s/%s.
 item.ooen.stone_pebble.name=Stone Pebble
 item.ooen.grass_seeds.name=Grass Seeds
 item.ooen.mycelium_spores.name=Mycelium Spores
+ooen.nei.sieve=Sieve
+ooen.nei.sieve.chance=Without Fortune: %s

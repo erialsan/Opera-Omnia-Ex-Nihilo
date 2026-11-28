@@ -13,3 +13,6 @@ ooen.barrel.fill=堆肥バレル：葉 %s/%s
 ooen.barrel.working=葉を堆肥にしています。
 ooen.barrel.ready=堆肥ができました。素手で右クリックすると土を回収できます。
 ooen.barrel.liquid=%s：%s mB
+ooen.nei.barrel=バレル
+ooen.nei.barrel.compost=堆肥の材料を合計%s個、%s秒
+ooen.nei.barrel.stone=石の樽専用

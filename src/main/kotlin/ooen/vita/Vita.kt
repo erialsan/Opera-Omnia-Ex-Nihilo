@@ -6,6 +6,8 @@ import cpw.mods.fml.common.event.FMLLoadCompleteEvent
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.registry.GameRegistry
 import net.minecraft.item.ItemStack
+import net.minecraftforge.fluids.FluidRegistry
+import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.oredict.ShapedOreRecipe
 import ooen.COMMON_DEPENDENCIES
 import ooen.ToolTier
@@ -24,6 +26,13 @@ object Vita {
     @JvmStatic @Mod.InstanceFactory private fun modInstance(): Vita = this
 
     private val wateringCans = ToolTier.entries.associateWith(::WateringCan)
+
+    internal fun starterWateringCan(): ItemStack {
+        val can = wateringCans.getValue(ToolTier.WOOD)
+        return ItemStack(can).also {
+            can.fill(it, FluidStack(FluidRegistry.WATER, can.getCapacity(it)), true)
+        }
+    }
 
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {

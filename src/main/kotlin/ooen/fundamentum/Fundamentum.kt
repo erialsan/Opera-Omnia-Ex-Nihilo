@@ -23,6 +23,7 @@ import net.minecraftforge.oredict.OreDictionary
 import net.minecraftforge.oredict.ShapedOreRecipe
 import ooen.COMMON_DEPENDENCIES
 import ooen.materia.Tags
+import ooen.registerNeiMetadata
 
 @Mod(
     modid = "ooen_fundamentum",
@@ -81,6 +82,7 @@ object Fundamentum {
             )
         }
         FMLInterModComms.sendMessage("Waila", "register", "ooen.fundamentum.WailaTooltips.register")
+        if (event.side.isClient) registerNeiMetadata("ooen_fundamentum", "barrel")
         MinecraftForge.EVENT_BUS.register(this)
     }
 

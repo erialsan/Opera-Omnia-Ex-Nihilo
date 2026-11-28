@@ -13,3 +13,6 @@ ooen.barrel.fill=Compost barrel: %s/%s leaves.
 ooen.barrel.working=The leaves are composting.
 ooen.barrel.ready=Compost is ready. Right-click with an empty hand to collect dirt.
 ooen.barrel.liquid=%s: %s mB
+ooen.nei.barrel=Barrel
+ooen.nei.barrel.compost=Any %s compostables, %s seconds
+ooen.nei.barrel.stone=Stone barrel only
