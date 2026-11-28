@@ -20,5 +20,6 @@
   { "metal": "Titanium", "rgb": "dbb7df" },
   { "metal": "Mithril", "rgb": "80d5de" },
   { "metal": "Thorium", "rgb": "87a18b" },
-  { "metal": "Netherite", "rgb": "88798b" }
+  { "metal": "Netherite", "rgb": "88798b" },
+  { "metal": "Draconium", "rgb": "9062c6" }
 ]

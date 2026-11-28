@@ -18,3 +18,5 @@ Materia はホワイトリストにあり、OreDictionary に具体的なイン�
 JAOPCA だけを追加して確認するには `./gradlew runClient25 -PooenProbe=jaopca-baseline` を使う。JAOPCA の JAR は [素材ライブラリの依存検証](dependency-tests.md) と同じ場所に置く。この構成から提供側を追加したときだけ、追加した金属がカタログに現れることを確認できる。
 
 標準構成では鉄と金を扱える。銅などの追加金属は、導入 MOD が対応インゴットを登録した環境で利用できる。ネザライトは `ingotNetherite` と `NetheriteIngot` に対応する。既存のホワイトリストで使う場合は `Netherite` を追加する。
+
+ドラコニウムはティア4で、環境に登録された `ingotDraconium` を使う。既存のホワイトリストには `Draconium` を追加する。覚醒ドラコニウムブロックは Transmutatio のるつぼの熱源として使える。

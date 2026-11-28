@@ -2,5 +2,5 @@
   { "tier": 1, "metals": ["Iron", "Tin", "Copper"] },
   { "tier": 2, "metals": ["Gold"] },
   { "tier": 3, "metals": ["Uranium"] },
-  { "tier": 4, "metals": ["Iridium", "Tungsten", "Titanium", "Netherite"] }
+  { "tier": 4, "metals": ["Iridium", "Tungsten", "Titanium", "Netherite", "Draconium"] }
 ]

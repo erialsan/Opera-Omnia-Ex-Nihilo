@@ -32,7 +32,7 @@ internal class CrucibleContents : TileEntity() {
 
     override fun updateEntity() {
         if (worldObj.isRemote || pending == 0) return
-        val crucible = blockType as? Crucible ?: return
+        val crucible = getBlockType() as? Crucible ?: return
         val amount = minOf(pending, crucible.rate(worldObj, xCoord, yCoord, zCoord))
         if (amount == 0) return
         val wasEmpty = fluidAmount == 0

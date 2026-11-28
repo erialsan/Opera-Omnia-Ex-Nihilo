@@ -15,6 +15,7 @@ description: 同梱テクスチャと参照した実装の出所、クレジッ�
 
 - [Creatio の篩の操作と連鎖処理](https://github.com/BloodyMods/ExNihiloCreatio/blob/1.12/src/main/java/exnihilocreatio/blocks/BlockSieve.java)
 - [Creatio の篩のクールダウンと進捗処理](https://github.com/BloodyMods/ExNihiloCreatio/blob/1.12/src/main/java/exnihilocreatio/tiles/TileSieve.java)
+- [小石の排出率の参照元になった Creatio の既定レシピ](https://github.com/BloodyMods/ExNihiloCreatio/blob/1.12/src/main/java/exnihilocreatio/recipes/defaults/ExNihilo.kt)
 
 ## じょうろ
 

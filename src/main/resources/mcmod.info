@@ -41,5 +41,11 @@
 		"description": "Watering cans for crops and saplings.",
 		"version": "${modVersion}",
 		"mcversion": "${minecraftVersion}"
+	}, {
+		"modid": "ooen_transmutatio",
+		"name": "Opera Omnia Ex Nihilo: Transmutatio",
+		"description": "Barrel reactions, water production, and crucibles for melting cobblestone.",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}"
 	}]
 }
