@@ -13,8 +13,8 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.IIcon
 import net.minecraft.world.World
 import ooen.exchangeBucket
+import ooen.fundamentum.PlantInputs
 import ooen.fundamentum.VanillaWood
-import ooen.fundamentum.matchesOre
 
 internal class Crucible(private val wood: VanillaWood?) :
     Block(if (wood == null) Material.rock else Material.wood) {
@@ -71,7 +71,7 @@ internal class Crucible(private val wood: VanillaWood?) :
     }
 
     private fun accepts(stack: ItemStack): Boolean =
-        if (isWooden) matchesOre(stack, "treeLeaves")
+        if (isWooden) PlantInputs.accepts(stack)
         else Block.getBlockFromItem(stack.item) == Blocks.cobblestone && stack.itemDamage == 0
 
     fun rate(world: World, x: Int, y: Int, z: Int): Int =

@@ -13,3 +13,5 @@ tile.ooen.sieve_acacia.name=アカシアの篩
 tile.ooen.sieve_dark_oak.name=ダークオークの篩
 ooen.sieve.progress=篩っています：%s/%s
 item.ooen.stone_pebble.name=小石
+item.ooen.grass_seeds.name=草の種
+item.ooen.mycelium_spores.name=菌糸の胞子

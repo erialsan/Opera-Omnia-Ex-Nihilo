@@ -50,6 +50,19 @@ object Cribrum {
                 .setCreativeTab(Fundamentum.creativeTab)
         GameRegistry.registerItem(pebble, "stone_pebble")
         GameRegistry.addShapedRecipe(ItemStack(Blocks.cobblestone), "PP", "PP", 'P', pebble)
+        GameRegistry.registerItem(
+            DirtConversionItem(Blocks.grass, "grass_seeds", "minecraft:seeds_wheat", 0xADFF70),
+            "grass_seeds",
+        )
+        GameRegistry.registerItem(
+            DirtConversionItem(
+                Blocks.mycelium,
+                "mycelium_spores",
+                "minecraft:seeds_melon",
+                0xD5A5DC,
+            ),
+            "mycelium_spores",
+        )
         MinecraftForge.EVENT_BUS.register(this)
         RecipeSorter.register(
             "ooen_cribrum:mesh_upgrade",

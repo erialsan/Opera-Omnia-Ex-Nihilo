@@ -103,7 +103,7 @@ internal class CompostBarrel(private val wood: VanillaWood?) :
             }
             return true
         }
-        if (fill >= COMPOST_CAPACITY || !matchesOre(held, "treeLeaves")) return false
+        if (fill >= COMPOST_CAPACITY || !PlantInputs.accepts(held)) return false
         if (!world.isRemote && world.setBlockMetadataWithNotify(x, y, z, fill + 1, 3)) {
             if (!player.capabilities.isCreativeMode) held.stackSize--
             if (fill + 1 == COMPOST_CAPACITY) world.scheduleBlockUpdate(x, y, z, this, 200)

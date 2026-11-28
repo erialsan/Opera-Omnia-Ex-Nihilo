@@ -2,6 +2,7 @@ package ooen.fundamentum
 
 import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.event.FMLInterModComms
+import cpw.mods.fml.common.event.FMLLoadCompleteEvent
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.registry.GameRegistry
@@ -81,6 +82,8 @@ object Fundamentum {
         MinecraftForge.EVENT_BUS.register(this)
     }
 
+    @Mod.EventHandler fun loadPlantInputs(event: FMLLoadCompleteEvent) = PlantInputs.load()
+
     @SubscribeEvent
     fun harvestLeaves(event: HarvestDropsEvent) {
         val player = event.harvester ?: return
@@ -88,21 +91,36 @@ object Fundamentum {
         if (event.world.isRemote || player.capabilities.isCreativeMode || tool.item != crook) return
         if (event.isSilkTouching) return
 
-        val drop =
+        val dropsLarva =
             if (event.block == infestedLeaves) {
-                if (infestedLeaves.isMature(event.blockMetadata)) ItemStack(Items.string, 2)
-                else null
+                infestedLeaves.isMature(event.blockMetadata).also { mature ->
+                    if (mature) event.drops.add(ItemStack(Items.string, 2))
+                }
             } else {
                 val item = Item.getItemFromBlock(event.block) ?: return
                 val leaf = ItemStack(item, 1, event.block.damageDropped(event.blockMetadata))
-                if (!matchesOre(leaf, "treeLeaves")) return
-                leaf
+                if (
+                    !event.block.isLeaves(event.world, event.x, event.y, event.z) &&
+                        !matchesOre(leaf, "treeLeaves")
+                )
+                    return
+                event.drops.removeAll { it.item == item }
+                event.block
+                    .getDrops(
+                        event.world,
+                        event.x,
+                        event.y,
+                        event.z,
+                        event.blockMetadata,
+                        event.fortuneLevel,
+                    )
+                    .filterTo(event.drops) {
+                        it.item == Items.apple || matchesOre(it, "treeSapling")
+                    }
+                true
             }
-        if (drop != null) {
-            event.drops.add(drop)
-            // Give a new crook a reliable first larva, then one every four harvests.
-            if (tool.itemDamage % 4 == 0) event.drops.add(ItemStack(larva))
-        }
+        // Give a new crook a reliable first larva, then one every four harvests.
+        if (dropsLarva && tool.itemDamage % 4 == 0) event.drops.add(ItemStack(larva))
         tool.damageItem(1, player)
         if (tool.stackSize == 0) player.destroyCurrentEquippedItem()
     }
@@ -141,5 +159,5 @@ private class Crook : Item() {
         if (block.material == Material.leaves) 4.0f else 1.0f
 }
 
-internal fun matchesOre(stack: ItemStack, oreName: String): Boolean =
+private fun matchesOre(stack: ItemStack, oreName: String): Boolean =
     OreDictionary.getOres(oreName, false).any { OreDictionary.itemMatches(it, stack, false) }

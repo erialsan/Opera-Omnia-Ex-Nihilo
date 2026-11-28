@@ -13,3 +13,5 @@ tile.ooen.sieve_acacia.name=Acacia Sieve
 tile.ooen.sieve_dark_oak.name=Dark Oak Sieve
 ooen.sieve.progress=Sifting: %s/%s.
 item.ooen.stone_pebble.name=Stone Pebble
+item.ooen.grass_seeds.name=Grass Seeds
+item.ooen.mycelium_spores.name=Mycelium Spores

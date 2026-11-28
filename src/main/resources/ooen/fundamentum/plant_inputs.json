@@ -1,0 +1,27 @@
+[
+  { "ore": "treeLeaves" },
+  { "ore": "treeSapling" },
+  { "item": "minecraft:apple" },
+
+  { "ore": "cropWheat" },
+  { "ore": "cropCarrot" },
+  { "ore": "cropPotato" },
+  { "ore": "cropBeetroot" },
+  { "ore": "seedBeetroot" },
+  { "item": "etfuturum:beetroot", "optional": true },
+  { "item": "etfuturum:beetroot_seeds", "optional": true },
+  { "item": "minecraft:wheat_seeds" },
+  { "item": "minecraft:poisonous_potato" },
+  { "item": "minecraft:pumpkin" },
+  { "item": "minecraft:pumpkin_seeds" },
+  { "item": "minecraft:melon" },
+  { "item": "minecraft:melon_block" },
+  { "item": "minecraft:melon_seeds" },
+  { "item": "minecraft:reeds" },
+  { "item": "minecraft:cactus" },
+  { "item": "minecraft:dye", "metadata": 3 },
+
+  { "item": "minecraft:vine" },
+  { "item": "minecraft:brown_mushroom" },
+  { "item": "minecraft:red_mushroom" }
+]

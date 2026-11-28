@@ -75,7 +75,9 @@ internal object SieveRecipes {
             }
             row.has("ore") -> {
                 val stack = concreteOreStacks(row.get("ore").asString).firstOrNull()
-                listOfNotNull(ItemUtil.copyAmount(1, stack))
+                val fallback = row.get("fallbackItem")?.asString
+                val item = fallback?.let { Item.itemRegistry.getObject(it) as? Item }
+                listOfNotNull(ItemUtil.copyAmount(1, stack) ?: item?.let(::ItemStack))
             }
             else -> {
                 val outputId = row.get("output").asString
